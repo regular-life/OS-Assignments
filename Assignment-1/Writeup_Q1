@@ -1,0 +1,10 @@
+Understanding the Code:
+      The code starts by including the necessary header files (<stdio.h>, <stdlib.h>, <unistd.h>, and <sys/wait.h>).
+      The main function begins by calling fork() to create a new process. The fork() function returns different values for the parent and child processes.
+      If fork() fails (returns a negative value), the parent process will print an error message.
+      If fork() succeeds and returns a positive value, the parent process proceeds into the first else if block. The parent process prints its own PID using getpid() [statement A executed]. Then, it waits for the child process to finish using wait(NULL). The wait() function ensures that the parent process pauses and does not proceed until the child process completes.
+      If fork() succeeds and returns 0, the code is executed in the child process. The child process prints its own PID using getpid() and the parent's PID using getppid() [statement C & D executed].
+      Once the child process finishes execution, the parent process continues and prints the child's PID stored in child_pid[statement B executed].
+
+Conclusion:
+      This code effectively demonstrates the creation of a parent-child relationship using fork() and the synchronization of their execution using wait(). It provides insight into how processes are created and managed in a Unix-like operating system, emphasizing the importance of synchronization in controlling the order of execution.
