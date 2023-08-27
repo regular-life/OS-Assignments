@@ -31,7 +31,7 @@ signed main(int argc, char *argv[])
         {
             int number_of_words = 0 ;
             char ch ;
-            while (ch = fgetc(file) != EOF)
+            while ( (ch = fgetc(file)) != EOF)
             {
                 if (ch == ' ' || ch == '.' || ch == '\n')
                 {
@@ -60,7 +60,7 @@ signed main(int argc, char *argv[])
                 {
                     int number_of_words = 0 ;
                     char ch ;
-                    while (ch = fgetc(file) != EOF)
+                    while ( (ch = fgetc(file)) != EOF)
                     {
                         if (ch == ' ' || ch == '.')
                         {
@@ -83,7 +83,7 @@ signed main(int argc, char *argv[])
             {
                 int number_of_words_1 = 0 ;
                 char ch ;
-                while (ch = fgetc(file1) != EOF)
+                while ( (ch = fgetc(file1)) != EOF)
                 {
                     if (ch == ' ' || ch == '.')
                     {
@@ -91,7 +91,7 @@ signed main(int argc, char *argv[])
                     }
                 }
                 int number_of_words_2 = 0 ;
-                while (ch = fgetc(file2) != EOF)
+                while ( (ch = fgetc(file2)) != EOF)
                 {
                     if (ch == ' ' || ch == '.')
                     {
