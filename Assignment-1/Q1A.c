@@ -7,7 +7,7 @@ signed main(int argc, char * argv[])
 {
     int child_pid = fork() ;
     int parent_pid = -100 ;
-    if (child_pid < 0) { printf("Why ????????? This failed. \n") ;}
+    if (child_pid < 0) { printf("Suck it, This failed. \n") ;}
     else if (child_pid > 0)
     {
         parent_pid = getpid() ;
