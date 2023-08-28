@@ -21,9 +21,9 @@ Q2B: Q2B.c
 Q2C: Q2C.c
 	$(CC) $(CFLAGS) -o Q2C Q2C.c
 
-Q3: Q3.c
-	$(CC) $(CFLAGS) -o Q3 Q3.c
+Q3:
+	chmod +x Q3.sh
 
 .PHONY: clean
 clean:
-	rm -f Q1A Q1B Q1B_Bonus Q2A Q2B Q2C Q3
+	rm -f Q1A Q1B Q1B_Bonus Q2A Q2B Q2C
