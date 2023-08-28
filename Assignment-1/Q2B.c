@@ -1,3 +1,5 @@
+// ASSUMPTION : Folder name can never start with '-' !!!!
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,6 +17,11 @@ signed main(int argc, char *argv[])
     if ( argc == 2)
     {
         char* dirname = argv[1] ;
+        if (dirname[0] == '-')
+        {
+            fprintf(stderr, "dir: usage error: cannot start the name of a file with a '- character\n") ;
+            return 1 ;
+        }
         int call = mkdir(dirname, 0777) ;
         if (call == -1)
         {
@@ -61,6 +68,7 @@ signed main(int argc, char *argv[])
             }
             else
             {
+                printf("File successfully created\n") ;
                 int change_path = chdir(dirname) ;
                 if (change_path == -1)
                 {
