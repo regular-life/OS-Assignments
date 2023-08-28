@@ -1,7 +1,5 @@
 #! /usr/bin/bash
 
-echo "Enter the input file name"
-read -r fileName
 i=0
 if [ ! -d "Result" ]; then
 	mkdir "Result"
@@ -11,7 +9,7 @@ else
 	fi
 fi
 
-if [ -f "$fileName" ]; then
+if [ -f "input.txt" ]; then
 	while true; do
 		read -r line
 		if [ "$line" == "" ]; then
@@ -23,17 +21,20 @@ if [ -f "$fileName" ]; then
 		b=$((words[1]))
 		if [ "${words[2]}" == "product" ]; then
 			ans=$((a * b))
+			op="Result of product ${a} ${b}: "
 		elif [ "${words[2]}" == "compare" ]; then
+			op="Result of compare ${a} ${b}: "
 			if [ $a -gt $b ]; then
 				ans=$a
 			else
 				ans=$b
 			fi
-		else
+		elif [ "${words[2]}" == "xor" ]; then
+			op="Result of xor ${a} ${b}: "
 			ans=$((a ^ b))
 		fi
-		echo "$ans" >>"Result/output.txt"
-	done <"$fileName"
+		echo "$op$ans" >>"Result/output.txt"
+	done <"input.txt"
 else
-	echo "$fileName does not exists"
+	echo "input.txt does not exists"
 fi
