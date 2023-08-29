@@ -1,6 +1,6 @@
 #Makefile for second question
 CFLAGS = -Wall -Wextra
-INSTALL_DIR = ${pwd}
+INSTALL_DIR := $(shell pwd)
 
 all: my_shell word dir date
 
