@@ -7,7 +7,6 @@
 
 void just_do_it(char *command, char *args)
 {
-    printf("%s\n", args[0]);
     pid_t pid = fork();
     if (pid == 0)
     {
