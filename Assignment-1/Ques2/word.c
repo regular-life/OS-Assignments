@@ -31,13 +31,16 @@ signed main(int argc, char *argv[])
         {
             int number_of_words = 0 ;
             char ch ;
+            int fl = 0 ;
             while ( (ch = fgetc(file)) != EOF)
             {
                 if (ch == ' ' || ch == '.' || ch == '\n')
                 {
                     number_of_words ++ ;
                 }
+                fl = 1 ;
             }
+            if (fl == 1) { number_of_words ++ ; } 
             printf("The number of words is : %d\n", number_of_words) ;
         }
         fclose(file) ;
@@ -60,13 +63,16 @@ signed main(int argc, char *argv[])
                 {
                     int number_of_words = 0 ;
                     char ch ;
+                    int fl = 0 ;
                     while ( (ch = fgetc(file)) != EOF)
                     {
                         if (ch == ' ' || ch == '.')
                         {
                             number_of_words ++ ;
                         }
+                        fl = 1 ;
                     }
+                    if (fl == 1) { number_of_words ++ ; }
                     printf("The number of words is : %d\n", number_of_words) ;
                 }
                 fclose(file) ;
@@ -83,21 +89,29 @@ signed main(int argc, char *argv[])
             {
                 int number_of_words_1 = 0 ;
                 char ch ;
+                int fl1 = 0, fl2 = 0 ;
                 while ( (ch = fgetc(file1)) != EOF)
                 {
                     if (ch == ' ' || ch == '.')
                     {
                         number_of_words_1 ++ ;
                     }
+                    fl1 = 1 ;
                 }
+                if (fl1 == 1) {number_of_words_1 ++ ;}
+                
                 int number_of_words_2 = 0 ;
+                int fl2 = 0 ;
                 while ( (ch = fgetc(file2)) != EOF)
                 {
                     if (ch == ' ' || ch == '.')
                     {
                         number_of_words_2 ++ ;
                     }
+                    fl2 = 1 ;
                 }
+                if (fl2 == 1) {number_of_words_2 ++ ;}
+                
                 if (number_of_words_1 > number_of_words_2)
                 {
                     printf("File %s has %d more words than File %s\n", argv[2], number_of_words_1 - number_of_words_2, argv[3]) ;
