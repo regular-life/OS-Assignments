@@ -1,6 +1,6 @@
 **Unix System Shell Commands Implementation**
 
-The shell is designed to execute three custom shell commands: `word`, `dir`, and `date by parsing user input and invoking the corresponding command functionality. The project utilizes C libraries and employs system calls like `fork()`, `execvp()`, and `wait()` for process management. Here is a brief description of each command's functionality:
+The shell is designed to execute three custom shell commands: `word`, `dir`, and date by parsing user input and invoking the corresponding command functionality. The project utilizes C libraries and employs system calls like `fork()`, `execvp()`, and `wait()` for process management. Here is a brief description of each command's functionality:
 
 1. **word Command**
    The `word` command is a built-in command that reads the number of words in a text file. The command can also take optional arguments for specific functionality:
