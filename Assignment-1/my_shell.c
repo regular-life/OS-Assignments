@@ -5,7 +5,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-void execute_external_command(char *command, char *args)
+void just_do_it(char *command, char *args)
 {
     printf("%s\n", args[0]);
     pid_t pid = fork();
@@ -28,18 +28,18 @@ int main(int argc, char *argv)
 {
 
     char *command = argv[0];
-    execute_external_command(command, argv + 1);
+    just_do_it(command, argv + 1);
     if (strncmp(command, "word", 4) == 0)
     {
-        execute_external_command(command, argv + 1);
+        just_do_it(command, argv + 1);
     }
     else if (strcmp(command, "dir") == 0)
     {
-        execute_external_command(command, argv + 1);
+        just_do_it(command, argv + 1);
     }
     else if (strcmp(command, "date") == 0)
     {
-        execute_external_command(command, argv + 1);
+        just_do_it(command, argv + 1);
     }
     else
     {
