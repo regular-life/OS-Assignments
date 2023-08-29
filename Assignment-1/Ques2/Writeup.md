@@ -32,5 +32,5 @@ The `shell.c` program is the main shell that handles user input and invokes the 
 **Error Handling:**
 The implemented commands include error handling for scenarios such as missing files, incorrect command syntax, and invalid options. Error messages are printed to stderr in case of errors.
 
-   Conclusion:
-      The Unix system shell commands (`word`, `dir`, and `date`) have been successfully implemented with C programming. The project demonstrates the use of system calls like `fork()`, `execvp()`, and `wait()` for process management, file operations, and command execution. The error handling ensures graceful handling of various scenarios, providing a reliable user experience. This project showcases the integration of custom shell commands into a Unix-like environment and provides a solid foundation for further exploration and expansion of shell functionalities.
+**Conclusion**:
+The Unix system shell commands (`word`, `dir`, and `date`) have been successfully implemented with C programming. The project demonstrates the use of system calls like `fork()`, `execvp()`, and `wait()` for process management, file operations, and command execution. The error handling ensures graceful handling of various scenarios, providing a reliable user experience. This project showcases the integration of custom shell commands into a Unix-like environment and provides a solid foundation for further exploration and expansion of shell functionalities.
