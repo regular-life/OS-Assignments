@@ -22,8 +22,8 @@ B.
             If `vfork()` succeeds and returns 0, the code is executed within the child process. The child process calls the factorial function to compute and print the factorial of 4.
             If `vfork()` succeeds and returns a positive value (not 0), the code is executed within the parent process. The parent process invokes the fibonacci function to calculate and print the first 16 elements of the Fibonacci series.
             The parent process waits for the child process to complete its computations using the `wait(NULL)` system call - which is the inbuilt command in `vfork()`.
-      ``Conclusion:
-            This code exemplifies the usage of the vfork() system call to create a parent-child relationship, where each process performs distinct computations. The program offers insights into concurrent processing and synchronization by computing factorials and generating the Fibonacci series. The parent's wait for the child process to finish exemplifies the importance of coordination when managing multiple processes. Understanding these concepts is pivotal for developing programs that leverage the parallelism offered by modern operating systems.``
+      Conclusion:
+            This code exemplifies the usage of the vfork() system call to create a parent-child relationship, where each process performs distinct computations. The program offers insights into concurrent processing and synchronization by computing factorials and generating the Fibonacci series. The parent's wait for the child process to finish exemplifies the importance of coordination when managing multiple processes. Understanding these concepts is pivotal for developing programs that leverage the parallelism offered by modern operating systems.
 
 
 
@@ -36,6 +36,6 @@ B_Bonus.
             Inside the `main()` function, a child process is created using the `fork()` system call. An error message is displayed if the `fork()` call fails (returns a negative value).
             If `fork()` succeeds and returns a positive value (not 0), the code executes within the parent process. The parent process employs the fibonacci function to calculate and print the first 16 elements of the Fibonacci series.
             If `fork()` succeeds and returns 0, the code executes within the child process. The child process invokes the factorial function to compute and print the factorial of 4.
-      ``Conclusion:
-            This code exemplifies how the fork() system calls can be utilized to establish parent-child relationships, where each process undertakes distinct computations. The program offers insights into concurrent processing and synchronization by calculating factorials and generating the Fibonacci series. The unique feature here is that the child process waits for the parent process to finish its computations, showcasing the significance of coordination in managing multiple processes. Grasping these fundamental concepts is pivotal for developing programs that harness the parallelism facilitated by modern operating systems.``
+      Conclusion:
+            This code exemplifies how the fork() system calls can be utilized to establish parent-child relationships, where each process undertakes distinct computations. The program offers insights into concurrent processing and synchronization by calculating factorials and generating the Fibonacci series. The unique feature here is that the child process waits for the parent process to finish its computations, showcasing the significance of coordination in managing multiple processes. Grasping these fundamental concepts is pivotal for developing programs that harness the parallelism facilitated by modern operating systems.
 
