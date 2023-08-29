@@ -101,7 +101,6 @@ signed main(int argc, char *argv[])
                 if (fl1 == 1) {number_of_words_1 ++ ;}
                 
                 int number_of_words_2 = 0 ;
-                int fl2 = 0 ;
                 while ( (ch = fgetc(file2)) != EOF)
                 {
                     if (ch == ' ' || ch == '.')
