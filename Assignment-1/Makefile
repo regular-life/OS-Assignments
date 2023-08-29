@@ -1,3 +1,4 @@
+#Makefile for second question
 CFLAGS = -Wall -Wextra
 INSTALL_DIR = ${pwd}
 
@@ -19,7 +20,7 @@ install: all
 	echo "alias word='${INSTALL_DIR}/word'" >> ~/.bashrc
 	echo "alias dir='${INSTALL_DIR}/dir'" >> ~/.bashrc
 	echo "alias date='${INSTALL_DIR}/date'" >> ~/.bashrc
-
+	echo "Please run source ~/.bashrc to use customized commands"
 
 clean:
 	-@rm -f my_shell word dir date
