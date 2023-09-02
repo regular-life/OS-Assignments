@@ -5,11 +5,49 @@
 ## Introduction
 This is a writeup for the implementation of system calls `fork()`, `vfork()` as specified in the problem statement in C language as part of the **IIITD CSE231 course Operating Systems** - Assignment 1.
 
-
 ## Table of Contents
-1. [Question A](#a)
-2. [Question B](#a)
-3. [Question B_Bonus](#b_bonus)
+1. [How to Run the Application](#how-to-run-the-application)
+2. [Explanation to code for Question A](#a)
+3. [Explanation to code for Question B](#a)
+4. [Explanation to code for Question B_Bonus](#b_bonus)
+
+## How to run the application
+1. **Prerequisites:**
+   - This program can only run on Linux.
+   - gcc library.
+2. **Cloning the Repository:**
+   - Clone the repository to your local machine using the following command:
+     ```bash
+     git clone https://github.com/regular-life/OS-Assignments
+     ```
+3. **Opening the Project:**
+   - Unzip the file and navigate to "Assignment-1" -> "Ques1".
+   - Right-click on the screen and select "Go to terminal here" (or any other similar option).
+4. **Running the program:**
+   - Write the following command on terminal:
+     ```bash
+     make all
+     ```
+   - Executable for all the programs have been made.
+   - Now, enter the following in terminal:
+     
+     to run A:
+     ```bash
+     ./Q1A
+     ```
+     to run B:
+     ```bash
+     ./Q1B
+     ```
+     to run B_Bonus:
+     ```bash
+     ./Q1B_Bonus
+     ```
+5. **Delete executables:**
+   - To delete all the executables, run the following command on the same terminal:
+     ```bash
+     make clean
+     ```
 
 <br />
 
