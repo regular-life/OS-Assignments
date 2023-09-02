@@ -12,43 +12,43 @@ This is a writeup for the implementation of three custom shell commands (`word`,
 <br />
 
 # word Command
-   ## Understanding the Code:
+   ### Understanding the Code:
    The `word` command is a built-in command that reads the number of words in a text file. The command can also take optional arguments for specific functionality:
    - `-n`: Ignores new line characters when counting words.
    - `-d`: Compares word counts between two text files.
    
-   ## Implementation Details:
+   ### Implementation Details:
    The `word.c` program uses file I/O operations to read characters from the given files, counting words based on space and period characters. It supports the specified `-n` and `-d` options. For `-d`, the program compares the word counts of two files and indicates the difference.
    
-   ## Conclusion:
+   ### Conclusion:
    This code effectively calculates word counts in text files while handling various options like ignoring new lines and comparing counts between files. Understanding this code is essential for implementing similar text-processing utilities.
 
 <br />
 
 # dir Command
-   ## Understanding the Code:
+   ### Understanding the Code:
    The `dir` command creates a directory and changes the working path to that directory. It can take optional arguments for specific functionality:
    - `-r`: Removes the directory if it already exists and then creates a new one.
    - `-v`: Prints messages for each step in the command's execution.
    
-   ## Implementation Details:
+   ### Implementation Details:
    The `dir.c` program uses the `mkdir()` system call to create directories and the `chdir()` system call to change the working directory. It handles the optional arguments `-r` and `-v` as specified.
    
-   ## Conclusion:
+   ### Conclusion:
    This code effectively manages directories, including options to remove existing directories and display verbose messages. Understanding this code is crucial for implementing directory manipulation utilities.
 
 <br />
 
 # date Command
-   ## Understanding the Code:
+   ### Understanding the Code:
    The `date` command returns a file's last modified date and time. It supports optional arguments for specific functionality:
    - `-d`: Displays the time described by a given string (e.g., '2 days ago', 'tomorrow').
    - `-R`: Outputs the date and time in RFC 5322 format.
    
-   ## Implementation Details:
+   ### Implementation Details:
    The `date.c` program uses the `stat()` system call to retrieve file information, including modification time. It handles optional arguments `-d` and `-R` as specified. For `-d`, the program adjusts the time based on the given string and displays the result.
    
-   ## Conclusion:
+   ### Conclusion:
    This code effectively retrieves and formats file modification times, including options for date manipulation and RFC 5322 formatting. Understanding this code is essential for developing time-related utilities in shell scripting.
 
 <br />
