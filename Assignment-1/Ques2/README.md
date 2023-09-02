@@ -6,12 +6,39 @@
 This is a writeup for the implementation of three custom shell commands (`word`, `dir`, and `date`) in C as part of the **IIITD CSE231 course Operating Systems** - Assignment 1.
 
 ## Table of Contents
-1. [word Command](#word-command)
-2. [dir Command](#dir-command)
-3. [date Command](#date-command)
-4. [Compilation and Execution](#compilation-and-execution)
-5. [Error Handling](#error-handling)
-6. [Conclusion](#conclusion-3)
+1. [How to Run the Application](#how-to-run-the-application)
+2. [word Command](#word-command)
+3. [dir Command](#dir-command)
+4. [date Command](#date-command)
+5. [Compilation and Execution](#compilation-and-execution)
+6. [Error Handling](#error-handling)
+7. [Conclusion](#conclusion-3)
+
+## How to run the application
+1. **Prerequisites:**
+   - This program can only run on Linux.
+   - gcc library.
+2. **Cloning the Repository:**
+   - Clone the repository to your local machine using the following command:
+     ```bash
+     git clone https://github.com/regular-life/OS-Assignments.git
+     ```
+3. **Opening the Project:**
+   - Unzip the file and navigate to "Assignment-1" -> "Ques2".
+   - Right-click on the screen and select "Go to terminal here" (or any other similar option).
+4. **Running the program:**
+   - Write the following command on terminal:
+     ```bash
+     make install
+     ```
+   - Executable for all the programs have been made.
+   - Now, enter the following in terminal:
+     # aage ka bacchi bataega
+5. **Delete executables:**
+   - To delete all the executables, run the following command on the same terminal:
+     ```bash
+     make clean
+     ```
 
 ---
 <br />
