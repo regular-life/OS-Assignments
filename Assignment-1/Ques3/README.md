@@ -28,6 +28,7 @@ This is a writeup for the implementation of Arithmetic Calculator using File I/O
      number_1 number_2 operation
      ```
    - "input.txt" can have multiple lines of input in the same format.
+   - Operations supported : xor, product, compare.
    - Write the following command on terminal:
      ```bash
      make run
