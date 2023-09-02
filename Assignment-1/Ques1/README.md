@@ -99,7 +99,7 @@ This code exemplifies how the `fork()` system calls can be utilized to establish
 
 ---
 
-### Contributors:
+## Contributors:
 - Yash Bhardwaj - [GitHub Profile](https://github.com/regular-life)
 - Sanyam Garg - [GitHub Profile](https://github.com/sanyam412)
 
