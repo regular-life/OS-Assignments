@@ -6,8 +6,37 @@
 This is a writeup for the implementation of Arithmetic Calculator using File I/O in Bash Script as part of the **IIITD CSE231 course Operating Systems** - Assignment 1.
 
 ## Table of Contents
-1. [Understanding the Code](#understanding-the-code)
-2. [Conclusion](#conclusion)
+1. [How to Run the Application](#how-to-run-the-application)
+2. [Understanding the Code](#understanding-the-code)
+3. [Conclusion](#conclusion)
+
+## How to run the application
+1. **Prerequisites:**
+   - This program can only run on Linux.
+   - gcc library.
+2. **Cloning the Repository:**
+   - Clone the repository to your local machine using the following command:
+     ```bash
+     git clone https://github.com/regular-life/OS-Assignments.git
+     ```
+3. **Opening the Project:**
+   - Unzip the file and navigate to "Assignment-1" -> "Ques3".
+   - Right-click on the screen and select "Go to terminal here" (or any other similar option).
+4. **Running the program:**
+   - Now make a file "input.txt" in the same directory which has text in the following format:
+     ```text
+     number_1 number_2 operation
+     ```
+   - "input.txt" can have multiple lines of input in the same format.
+   - Write the following command on terminal:
+     ```bash
+     make run
+     ```
+   - Type the following command on terminal:
+     ```bash
+     Calculator
+     ```
+   - "output.txt" created in the directory "Result" will have outputs for all the inputs in "input.txt"
 
 ---
 <br />
