@@ -102,6 +102,6 @@ This code exemplifies how the `fork()` system calls can be utilized to establish
 ---
 ## Contributors:
 - Yash Bhardwaj - [GitHub Profile](https://github.com/regular-life)
-- Sanyam Garg - [GitHub Profile](https://github.com/sanyam412)
+- Sanyam Garg - [GitHub Profile](https://github.com/SanyamGarg12)
 
 Feel free to reach to any of us at sanyam22448@iiitd.ac.in or yash22586@iiitd.ac.in for any questions or issues related to the above assignment.
