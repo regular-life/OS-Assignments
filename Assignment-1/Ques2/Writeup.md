@@ -7,7 +7,7 @@ This is a writeup for the implementation of three custom shell commands (`word`,
 3. [date Command](#date-command)
 4. [Compilation and Execution](#compilation-and-execution)
 5. [Error Handling](#error-handling)
-6. [Conclusion](#conclusion)
+6. [Conclusion](#conclusion-3)
 
 <br />
 
