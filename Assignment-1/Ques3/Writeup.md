@@ -1,7 +1,7 @@
 # Arithmetic Calculator Bash Script
 
 ## Introduction
-This document explains the functionality and implementation of an arithmetic calculator Bash script. The script reads input from "input.txt," performs calculations based on the provided operation, and saves the results in "output.txt" within the "Result" directory.
+This is a writeup for the implementation of Arithmetic Calculator using File I/O in Bash Script as part of the **IIITD CSE231 course Operating Systems** - Assignment 1.
 
 ## Table of Contents
 1. [Understanding the Code](#understanding-the-code)
