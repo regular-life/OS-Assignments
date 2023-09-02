@@ -19,6 +19,8 @@ This is a writeup for the implementation of Arithmetic Calculator using File I/O
      ```bash
      git clone https://github.com/regular-life/OS-Assignments.git
      ```
+     **OR**
+   - Download the .zip file from https://github.com/regular-life/AP-Assignments.
 3. **Opening the Project:**
    - Unzip the file and navigate to "Assignment-1" -> "Ques3".
    - Right-click on the screen and select "Go to terminal here" (or any other similar option).
