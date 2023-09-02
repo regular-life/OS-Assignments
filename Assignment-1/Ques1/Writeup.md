@@ -1,5 +1,5 @@
 # Introduction
-This is a writeup for the codes of IIITD's CSE231 course Operating Systems - Assignment 1 Question 1.
+This is a writeup for the implementation of system calls fork(), vfork() as specified in the problem statement in C language as part of the IIITD's CSE231 course Operating Systems - Assignment 1.
 
 
 # Table of Contents
