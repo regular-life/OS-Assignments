@@ -10,6 +10,7 @@ This is a writeup for the implementation of system calls `fork()`, `vfork()` as 
 2. [Explanation to code for Question A](#a)
 3. [Explanation to code for Question B](#a)
 4. [Explanation to code for Question B_Bonus](#b_bonus)
+5. [Contributors](contributors)
 
 ## How to run the application
 1. **Prerequisites:**
@@ -95,3 +96,11 @@ This code exemplifies the usage of the `vfork()` system call to create a parent-
       
 ### Conclusion:
 This code exemplifies how the `fork()` system calls can be utilized to establish parent-child relationships, where each process undertakes distinct computations. The program offers insights into concurrent processing and synchronization by calculating factorials and generating the Fibonacci series. The unique feature here is that the child process waits for the parent process to finish its computations, showcasing the significance of coordination in managing multiple processes. Grasping these fundamental concepts is pivotal for developing programs that harness the parallelism facilitated by modern operating systems.
+
+---
+
+### Contributors:
+- Yash Bhardwaj - [GitHub Profile](https://github.com/regular-life)
+- Sanyam Garg - [GitHub Profile](https://github.com/sanyam412)
+
+Feel free to reach to any of us at sanyam22448@iiitd.ac.in or yash22586@iiitd.ac.in for any questions or issues related to the above assignment.
