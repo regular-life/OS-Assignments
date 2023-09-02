@@ -1,5 +1,7 @@
 # Arithmetic Calculator Bash Script
 
+<br />
+
 ## Introduction
 This is a writeup for the implementation of Arithmetic Calculator using File I/O in Bash Script as part of the **IIITD CSE231 course Operating Systems** - Assignment 1.
 
