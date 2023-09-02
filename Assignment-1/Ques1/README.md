@@ -18,7 +18,7 @@ This is a writeup for the implementation of system calls `fork()`, `vfork()` as 
 2. **Cloning the Repository:**
    - Clone the repository to your local machine using the following command:
      ```bash
-     git clone https://github.com/regular-life/OS-Assignments
+     git clone https://github.com/regular-life/OS-Assignments.git
      ```
 3. **Opening the Project:**
    - Unzip the file and navigate to "Assignment-1" -> "Ques1".
