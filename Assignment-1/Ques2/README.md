@@ -104,7 +104,7 @@ The Unix system shell commands (`word`, `dir`, and `date`) have been successfull
 <br />
 
 ---
-## Contributors:
+## Contributors
 - Yash Bhardwaj - [GitHub Profile](https://github.com/regular-life)
 - Sanyam Garg - [GitHub Profile](https://github.com/sanyam412)
 
