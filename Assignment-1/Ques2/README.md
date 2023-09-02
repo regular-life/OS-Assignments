@@ -13,6 +13,7 @@ This is a writeup for the implementation of three custom shell commands (`word`,
 5. [Compilation and Execution](#compilation-and-execution)
 6. [Error Handling](#error-handling)
 7. [Conclusion](#conclusion-3)
+8. [Contributors](contributors)
 
 ## How to run the application
 1. **Prerequisites:**
@@ -99,3 +100,12 @@ The implemented commands include error handling for scenarios such as missing fi
 
 ## Conclusion
 The Unix system shell commands (`word`, `dir`, and `date`) have been successfully implemented with C programming. The project demonstrates the use of system calls like `fork()`, `execvp()`, and `wait()` for process management, file operations, and command execution. The error handling ensures graceful handling of various scenarios, providing a reliable user experience. This project showcases the integration of custom shell commands into a Unix-like environment and provides a solid foundation for further exploration and expansion of shell functionalities.
+
+<br />
+
+---
+## Contributors:
+- Yash Bhardwaj - [GitHub Profile](https://github.com/regular-life)
+- Sanyam Garg - [GitHub Profile](https://github.com/sanyam412)
+
+Feel free to reach to any of us at sanyam22448@iiitd.ac.in or yash22586@iiitd.ac.in for any questions or issues related to the above assignment.
