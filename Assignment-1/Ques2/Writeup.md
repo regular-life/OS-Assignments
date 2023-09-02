@@ -1,7 +1,9 @@
-# Introduction
-This is a writeup for the implementation of three custom shell commands (`word`, `dir`, and `date`) in C as part of the IIITD's CSE231 course Operating Systems - Assignment 1.
+# Custom Shell Commands
 
-# Table of Contents
+## Introduction
+This is a writeup for the implementation of three custom shell commands (`word`, `dir`, and `date`) in C as part of the **IIITD CSE231 course Operating Systems** - Assignment 1.
+
+## Table of Contents
 1. [word Command](#word-command)
 2. [dir Command](#dir-command)
 3. [date Command](#date-command)
@@ -9,9 +11,10 @@ This is a writeup for the implementation of three custom shell commands (`word`,
 5. [Error Handling](#error-handling)
 6. [Conclusion](#conclusion-3)
 
+---
 <br />
 
-# word Command
+## word Command
    ### Understanding the Code:
    The `word` command is a built-in command that reads the number of words in a text file. The command can also take optional arguments for specific functionality:
    - `-n`: Ignores new line characters when counting words.
@@ -25,7 +28,7 @@ This is a writeup for the implementation of three custom shell commands (`word`,
 
 <br />
 
-# dir Command
+## dir Command
    ### Understanding the Code:
    The `dir` command creates a directory and changes the working path to that directory. It can take optional arguments for specific functionality:
    - `-r`: Removes the directory if it already exists and then creates a new one.
@@ -39,7 +42,7 @@ This is a writeup for the implementation of three custom shell commands (`word`,
 
 <br />
 
-# date Command
+## date Command
    ### Understanding the Code:
    The `date` command returns a file's last modified date and time. It supports optional arguments for specific functionality:
    - `-d`: Displays the time described by a given string (e.g., '2 days ago', 'tomorrow').
@@ -53,15 +56,15 @@ This is a writeup for the implementation of three custom shell commands (`word`,
 
 <br />
 
-# Compilation and Execution
+## Compilation and Execution
 The `shell.c` program is the main shell that handles user input and invokes the corresponding command programs based on the provided command names and arguments. It uses the `fork()` and `execvp()` system calls to create child processes and execute the specified commands.
 
 <br />
 
-# Error Handling
+## Error Handling
 The implemented commands include error handling for scenarios such as missing files, incorrect command syntax, and invalid options. Error messages are printed to stderr in case of errors.
 
 <br />
 
-# Conclusion
+## Conclusion
 The Unix system shell commands (`word`, `dir`, and `date`) have been successfully implemented with C programming. The project demonstrates the use of system calls like `fork()`, `execvp()`, and `wait()` for process management, file operations, and command execution. The error handling ensures graceful handling of various scenarios, providing a reliable user experience. This project showcases the integration of custom shell commands into a Unix-like environment and provides a solid foundation for further exploration and expansion of shell functionalities.
