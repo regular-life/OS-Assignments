@@ -77,7 +77,7 @@ This Bash script effectively acts as an arithmetic calculator by reading input f
 <br />
 
 ---
-## Contributors:
+## Contributors
 - Yash Bhardwaj - [GitHub Profile](https://github.com/regular-life)
 - Sanyam Garg - [GitHub Profile](https://github.com/sanyam412)
 
