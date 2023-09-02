@@ -1,5 +1,7 @@
 # Custom Shell Commands
 
+<br />
+
 ## Introduction
 This is a writeup for the implementation of three custom shell commands (`word`, `dir`, and `date`) in C as part of the **IIITD CSE231 course Operating Systems** - Assignment 1.
 
