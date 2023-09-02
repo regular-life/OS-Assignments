@@ -20,6 +20,8 @@ This is a writeup for the implementation of system calls `fork()`, `vfork()` as 
      ```bash
      git clone https://github.com/regular-life/OS-Assignments.git
      ```
+     **OR**
+   - Download the .zip file from https://github.com/regular-life/AP-Assignments.
 3. **Opening the Project:**
    - Unzip the file and navigate to "Assignment-1" -> "Ques1".
    - Right-click on the screen and select "Go to terminal here" (or any other similar option).
