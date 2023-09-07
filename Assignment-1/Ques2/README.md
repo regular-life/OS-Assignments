@@ -16,9 +16,8 @@ This is a writeup for the implementation of three custom shell commands (`word`,
 8. [Contributors](contributors)
 
 ## How to run the application
-1. **Prerequisites:**
-   - This program can only run on Linux.
-   - gcc library.
+1. **Environment:**
+   - This program can only run on Linux environment (One of the major reasons being sys/wait.h named c library).
 2. **Cloning the Repository:**
    - Clone the repository to your local machine using the following command:
      ```bash
@@ -28,15 +27,19 @@ This is a writeup for the implementation of three custom shell commands (`word`,
    - Download the .zip file from https://github.com/regular-life/AP-Assignments.
 3. **Opening the Project:**
    - Unzip the file and navigate to "Assignment-1" -> "Ques2".
-   - Right-click on the screen and select "Go to terminal here" (or any other similar option).
+   - Right-click on the screen and select "Open Terminal here" (or any other similar option).
 4. **Running the program:**
+   - Make sure that your pwd contains the make file!
    - Write the following command on terminal:
      ```bash
      make install
      ```
    - Executable for all the programs have been made.
    - Now, enter the following in terminal:
-     # aage ka bacchi bataega
+      ```bash
+      source ~/.bashrc
+      ```
+   - The above command will modify your terminal so you can directly use our 3 customized commands like predefined ones!
 5. **Delete executables:**
    - To delete all the executables, run the following command on the same terminal:
      ```bash
