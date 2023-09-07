@@ -33,7 +33,7 @@ signed main(int argc, char *argv[])
 
         char rfc_time[100];
         strftime(rfc_time, sizeof(rfc_time), "%a, %d %b %Y %H:%M:%S %z", localtime(&mtime));
-        printf("%s\n", rfc_time);
+        printf("%s\n", last_time);
     }
     else if (argc == 3 && strcmp(argv[1], "-R") == 0)
     {
