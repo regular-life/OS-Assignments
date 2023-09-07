@@ -137,4 +137,9 @@ signed main(int argc, char *argv[])
 
         printf("%s\n", adjusted_time_str);
     }
+    else
+    {
+        fprintf(stderr, "Usage: date [-option] [file_name]\n");
+        return 1;
+    }
 }
