@@ -92,7 +92,7 @@ This code exemplifies the usage of the `vfork()` system call to create a parent-
 - The fibonacci function computes and prints the first n elements of the Fibonacci series. It initializes prev to 0 and curr to 1. It then iteratively updates curr by adding prev and shifts the values for the next iteration. (Classic Iterative method for calculating Fibonacci Numbers.)
 - Inside the `main()` function, a child process is created using the `fork()` system call. An error message is displayed if the `fork()` call fails (returns a negative value).
 - If `fork()` succeeds and returns a positive value (not 0), the code executes within the parent process. The parent process employs the fibonacci function to calculate and print the first 16 elements of the Fibonacci series.
-- If `fork()` succeeds and returns 0, the code executes within the child process. The child process invokes the factorial function to compute and print the factorial of 4.
+- If `fork()` succeeds and returns 0, the code executes within the child process. The child process invokes the factorial function to compute and print the factorial of 4..
       
 ### Conclusion:
 This code exemplifies how the `fork()` system calls can be utilized to establish parent-child relationships, where each process undertakes distinct computations. The program offers insights into concurrent processing and synchronization by calculating factorials and generating the Fibonacci series. The unique feature here is that the child process waits for the parent process to finish its computations, showcasing the significance of coordination in managing multiple processes. Grasping these fundamental concepts is pivotal for developing programs that harness the parallelism facilitated by modern operating systems.
