@@ -12,9 +12,13 @@ This is a writeup for the implementation of Arithmetic Calculator using File I/O
 4. [Contributors](contributors)
 
 ## How to run the application
-1. **Prerequisites:**
-   - This program can only run on Linux.
-   - gcc library.
+1. **Environment:**
+   - This program can run on Linux (Recommended) and Windows environments!
+   - Run in terminal:
+     ```bash
+     which bash
+     ```
+     If it's not #! /usr/bin/bash then, before running the program please replace your bash thing from the first line of Calculator.sh.
 2. **Cloning the Repository:**
    - Clone the repository to your local machine using the following command:
      ```bash
@@ -38,7 +42,12 @@ This is a writeup for the implementation of Arithmetic Calculator using File I/O
      ```
    - Type the following command on terminal:
      ```bash
-     Calculator
+     ./Calculator.sh
+     ```
+     or
+     (Recommended*)
+     ```bash
+     bash Calculator.sh
      ```
    - "output.txt" created in the directory "Result" will have outputs for all the inputs in "input.txt"
 
