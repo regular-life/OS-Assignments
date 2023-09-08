@@ -76,9 +76,10 @@ signed main(int argc, char *argv[])
     else if (argc == 3)
     {
         char *dirname = argv[2];
-        int call = mkdir(dirname, 0777);
+ 
         if (strcmp(argv[1], "-r") == 0)
         {
+            int call = mkdir(dirname, 0777);
             if (call == -1)
             {
                 remove_directory(dirname);
@@ -99,6 +100,7 @@ signed main(int argc, char *argv[])
         }
         else if (strcmp(argv[1], "-v") == 0)
         {
+            int call = mkdir(dirname, 0777);
             if (call == -1)
             {
                 fprintf(stderr, "dir: file already exists\n");
