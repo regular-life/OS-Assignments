@@ -12,7 +12,8 @@ date:
 clean:
 	-@rm -f word dir date
 
-#make install to modify shell for commands like word,dir,date.
+# make install to modify shell for commands like word,dir,date. and run this just once.
+#Note: Still you are not able to use dir, date, word then run source ~/.bashrc in terminal!.
 install:
 	echo "\nalias word='/home/sanyam/Desktop/OS-Assignments-main/Assignment-1/Ques2/word'" >> ~/.bashrc
 	echo "alias dir='/home/sanyam/Desktop/OS-Assignments-main/Assignment-1/Ques2/dir'" >> ~/.bashrc
