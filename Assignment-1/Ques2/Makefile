@@ -24,4 +24,5 @@ remove_txt:
 	-@rm -f *.txt
 
 remove_dirs:
-	-@find . -type d ! -name '.' ! -name '..' -exec rm -r {} \;
+	-@find . -depth -type d ! -name '.' ! -name '..' -exec rm -r {} \;
+
