@@ -1,11 +1,7 @@
-#Makefile for second question
 CFLAGS = -Wall -Wextra
 INSTALL_DIR := $(shell pwd)
 
-all: my_shell word dir date
-
-my_shell: my_shell.c
-	gcc $(CFLAGS) -o my_shell my_shell.c
+all: word dir date
 
 word: word.c
 	gcc $(CFLAGS) -o word word.c
@@ -23,4 +19,4 @@ install: all
 	echo "Please run source ~/.bashrc to use customized commands"
 
 clean:
-	-@rm -f my_shell word dir date
+	-@rm -f word dir date
