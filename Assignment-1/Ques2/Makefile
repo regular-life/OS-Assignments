@@ -15,8 +15,8 @@ clean:
 #make install to modify shell for commands like word,dir,date.
 install:
 	echo "\nalias word='/home/sanyam/Desktop/OS-Assignments-main/Assignment-1/Ques2/word'" >> ~/.bashrc
-	echo "\nalias dir='/home/sanyam/Desktop/OS-Assignments-main/Assignment-1/Ques2/dir'" >> ~/.bashrc
-	echo "\nalias date='/home/sanyam/Desktop/OS-Assignments-main/Assignment-1/Ques2/date'" >> ~/.bashrc
+	echo "alias dir='/home/sanyam/Desktop/OS-Assignments-main/Assignment-1/Ques2/dir'" >> ~/.bashrc
+	echo "alias date='/home/sanyam/Desktop/OS-Assignments-main/Assignment-1/Ques2/date'" >> ~/.bashrc
 
 #To remove all .txt files in current working directory
 remove_txt:
