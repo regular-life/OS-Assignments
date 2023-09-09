@@ -19,5 +19,9 @@ install: all
 
 clean:
 	-@rm -f word dir date
+
 remove_txt:
 	-@rm -f *.txt
+
+remove_dirs:
+	-@find . -type d ! -name '.' ! -name '..' -exec rm -r {} \;
