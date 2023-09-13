@@ -37,7 +37,10 @@ This is a writeup for making kernel module in C language as part of the **IIITD 
      ```bash
       sudo insmod code.ko
      ```
-   - The module has been loaded on the kernel.
+   - The module has been loaded on the kernel. To verify, type the following on terminal:
+     ```bash
+     sudo lsmod
+     ```
    - Now, write the following command to see the module in action:
      ```bash
      sudo dmesg
@@ -47,6 +50,10 @@ This is a writeup for making kernel module in C language as part of the **IIITD 
    - To unload the module from the kernel, type the following:
      ```bash
      sudo rmmod code.ko
+     ```
+   - To verify that the module has been unloaded, type the following on terminal:
+     ```bash
+     sudo lsmod
      ```
    - After unloading, write the following on terminal:
      ```bash
