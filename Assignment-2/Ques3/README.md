@@ -37,7 +37,7 @@ This is a writeup for making kernel module in C language as part of the **IIITD 
      ```bash
       sudo insmod code.ko
      ```
-   - The module has been loaded on the kernel. To verify, type the following on terminal:
+   - The module has been loaded on the kernel. To verify, type the following on terminal and search for `code` in the list (It's likely to appear at the top):
      ```bash
      sudo lsmod
      ```
