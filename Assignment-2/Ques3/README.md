@@ -44,9 +44,9 @@ This is a writeup for making kernel module in C language as part of the **IIITD 
      ```
    - A long list will appear on the terminal and you will see the the number of currently active processes at the bottom.
    - To unload the module from the kernel, type the following:
-   ```bash
-   sudo rmmod code.ko
-   ```
+     ```bash
+     sudo rmmod code.ko
+     ```
 5. **Delete module files:**
    To delete all module files, type the following on terminal:
    ```bash
