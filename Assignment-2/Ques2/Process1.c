@@ -8,6 +8,6 @@ int main()
     {
         c++;
     }
-    printf("%lf\n", c);
+    printf("Process1 %lf\n", c);
     return 0;
 }
