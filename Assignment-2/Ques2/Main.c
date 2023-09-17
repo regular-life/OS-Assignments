@@ -8,7 +8,10 @@
 #define power 1e9
 pid_t pida, pidb, pidc;
 struct timespec sa, fa, sb, fb, sc, fc;
-
+float time_store_a;
+float time_store_b;
+float time_store_c;
+FILE *file;
 int main()
 {
     pida = fork();
@@ -20,6 +23,11 @@ int main()
     }
     else if (pida > 0)
     {
+        wait(NULL);
+        clock_gettime(0, &fa);
+        time_store_a = (fa.tv_sec - sa.tv_sec) + (fa.tv_nsec - sa.tv_nsec) / power;
+        file = fopen("file.txt", "a");
+        fprintf(file, "a %f\n", time_store_a);
         pidb = fork();
         if (pidb == 0)
         {
@@ -29,6 +37,11 @@ int main()
         }
         else if (pidb > 0)
         {
+            wait(NULL);
+            clock_gettime(0, &fb);
+            time_store_b = (fb.tv_sec - sb.tv_sec) + (fb.tv_nsec - sb.tv_nsec) / power;
+            file = fopen("file.txt", "a");
+            fprintf(file, "b %f\n", time_store_b);
             pidc = fork();
             if (pidc == 0)
             {
@@ -38,6 +51,11 @@ int main()
             }
             else if (pidc > 0)
             {
+                wait(NULL);
+                clock_gettime(0, &fc);
+                time_store_c = (fc.tv_sec - sc.tv_sec) + (fc.tv_nsec - sc.tv_nsec) / power;
+                file = fopen("file.txt", "a");
+                fprintf(file, "c %f\n", time_store_c);
             }
             else if (pidc < 0)
             {
@@ -53,35 +71,7 @@ int main()
     {
         perror("Error in Forking A");
     }
-
-    float time_store;
-    pid_t piw = waitpid(-1, NULL, 0);
-    FILE *file_pointer;
-    while (piw != -1)
-    {
-        if (piw == pida)
-        {
-            clock_gettime(0, &fa);
-            time_store = (fa.tv_sec - sa.tv_sec) + (fa.tv_nsec - sa.tv_nsec) / power;
-            file_pointer = fopen("file.txt", "a");
-            fprintf(file_pointer, "SCHED_OTHER: %f\n", time_store);
-        }
-        if (piw == pidb)
-        {
-            clock_gettime(0, &fb);
-            time_store = (fb.tv_sec - sb.tv_sec) + (fb.tv_nsec - sb.tv_nsec) / power;
-            file_pointer = fopen("file.txt", "a");
-            fprintf(file_pointer, "SCHED_FIFO: %f\n", time_store);
-        }
-        if (piw == pidc)
-        {
-            clock_gettime(0, &fc);
-            time_store = (fc.tv_sec - sc.tv_sec) + (fc.tv_nsec - sc.tv_nsec) / power;
-            file_pointer = fopen("file.txt", "a");
-            fprintf(file_pointer, "SCHED_RR: %f\n", time_store);
-        }
-    }
+    fclose(file);
     // system("python3 Graph.py");
-    fclose(file_pointer);
     return 0;
 }
