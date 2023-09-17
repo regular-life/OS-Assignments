@@ -4,6 +4,9 @@
 #include <linux/sched.h>
 #include <linux/printk.h>
 #include <linux/init.h>
+#include <linux/pid.h>
+#include <linux/cred.h>
+#include <linux/moduleparam.h>
 
 MODULE_AUTHOR("Yash") ;
 MODULE_LICENSE("GPL") ;
@@ -11,14 +14,17 @@ MODULE_DESCRIPTION("Module to count running processes.") ;
 
 static long long count_running_processes(void)
 {
-    struct task_struct *task = current ;
-    for (; task->pid != 1 ; task = task->parent) ;
     long long cnt = 0 ;
-    for_each_node(task)
+    for (int i = 0 ; i <= 32768 ; i ++)
     {
-        cnt ++ ;
+        struct task_struct *task = pid_task(find_vpid(i), PIDTYPE_PID) ;
+        //check if process is running
+        if (task)
+        {
+            cnt++;
+            //pr_info("Process %s with pid %d is running.\n", task->comm, task->pid) ;
+        }
     }
-
     return cnt ;
 }
 
