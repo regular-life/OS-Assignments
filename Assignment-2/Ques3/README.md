@@ -67,10 +67,70 @@ This is a writeup for making kernel module in C language as part of the **IIITD 
    ```
 
 ## Understanding the Code
-- The code begins by including necessary header files (`<linux/kernel.h>`, `<linux/module.h>`, `<linux/signal.h>`, `<linux/sched.h>`, and `<linux/printk.h>`).
-- The `count_running_processes()` function is defined to count the number of running processes using the `for_each_process` macro.
-- In the `init_module()` function, the `count_running_processes()` function is called to count the running processes and print the result.
-- The `cleanup_module()` function is called when the module is unloaded and simply prints a message indicating that the module has been unloaded.
+The given code is a Linux kernel module designed to count and display information about running processes. It interacts with the kernel's process management infrastructure to achieve this. Let's break down the code and understand its functionality step by step:
+### Module Initialization
+   ```c
+    MODULE_AUTHOR("Yash") ;
+    MODULE_LICENSE("GPL") ;
+    MODULE_DESCRIPTION("Module to count running processes.") ;
+   ```
+   These lines specify metadata about the module, such as the author, license, and description.
+
+### count_running_processes Function
+   ```c
+   static long long count_running_processes(void)
+   {
+      long long cnt = 0 ;
+      rcu_read_lock() ;
+      for (int i = 0 ; i <= 100000000 ; i ++)
+      {
+         struct task_struct *task = pid_task(find_vpid(i), PIDTYPE_PID) ;
+         if (task)
+         {
+            if (task->__state == 0)
+            {
+               cnt ++ ;
+               printk(KERN_INFO "%s %d \n", task->comm, task->pid) ;
+            }
+         }
+      }
+      rcu_read_unlock() ;
+      return cnt ;
+   }
+  ```
+
+- This function is the heart of the module, responsible for counting and displaying running processes.
+- It initializes a counter cnt and acquires a read lock on the RCU (Read-Copy-Update) mechanism using `rcu_read_lock()`. RCU is a mechanism used in the Linux kernel for efficient and safe read-side access to shared data structures.
+- It then iterates through a range of process IDs (PIDs), from 0 to 100,000,000.
+- For each PID, it attempts to find the corresponding process using `find_vpid(i)` and specifies that it's searching for a process with type `PIDTYPE_PID`.
+- If a valid process structure is found (`if (task)`), it checks if the process is in the `TASK_RUNNING` state (`if (task->__state == 0)`). The `TASK_RUNNING `state indicates that the process is currently runnable and active.
+- If the process is indeed running, it increments the counter `cnt` and prints information about the process using `printk`. This includes the process's name (`task->comm`) and its PID (`task->pid`).
+- Finally, it releases the RCU read lock using `rcu_read_unlock()` and returns the count of running processes.
+
+### Module Initialization and Cleanup
+   ```c
+   static int __init display_init(void)
+   { 
+       long long cnt = count_running_processes() ;
+       printk(KERN_INFO "Module loaded successfully.\nNumber of running process: %lld\n", cnt) ;
+       return 0 ;
+   }
+   
+   static void __exit display_cleanup(void)
+   {
+       printk(KERN_INFO "Module unloaded successfully.\n") ;
+   }
+   ```
+- These functions are responsible for module initialization and cleanup.
+- `display_init` is called when the module is loaded. It invokes `count_running_processes` to count running processes, then prints this count along with a success message using `printk`.
+- `display_cleanup` is called when the module is unloaded. It simply prints a message to indicate successful unloading.
+
+### Module Entry and Exit Points
+   ```c
+   module_init(display_init) ;
+   module_exit(display_cleanup) ;
+   ```
+- These lines specify the entry and exit points for the module. `module_init` specifies the function to call during module initialization, and `module_exit` specifies the function to call during module cleanup.
 
 ## Conclusion
 This kernel module demonstrates how to count the number of running processes using a custom system call. When loaded, the module provides information about the number of active processes on the system. Understanding kernel module development is essential for low-level system programming.
