@@ -7,69 +7,72 @@
 
 #define power 1e9
 pid_t pida, pidb, pidc;
-struct timespec sa, fa, sb, fb, sc, fc;
+struct timespec start_a, finish_a, start_b, finish_b, start_c, finish_c;
 float time_store_a;
 float time_store_b;
 float time_store_c;
 FILE *file;
 int main()
 {
+    clock_gettime(0, &start_a);
     pida = fork();
     if (pida == 0)
     {
-        clock_gettime(0, &sa);
         sched_setscheduler(pida, SCHED_OTHER, NULL);
         execl("./Process1", "Process1", NULL, NULL);
     }
     else if (pida > 0)
     {
         wait(NULL);
-        clock_gettime(0, &fa);
-        time_store_a = (fa.tv_sec - sa.tv_sec) + (fa.tv_nsec - sa.tv_nsec) / power;
+        clock_gettime(0, &finish_a);
+        time_store_a = (finish_a.tv_sec - start_a.tv_sec) + (finish_a.tv_nsec - start_a.tv_nsec) / power;
         file = fopen("file.txt", "a");
         fprintf(file, "a %f\n", time_store_a);
+        clock_gettime(0, &start_b);
         pidb = fork();
         if (pidb == 0)
         {
-            clock_gettime(0, &sb);
             sched_setscheduler(pidb, SCHED_FIFO, NULL);
             execl("./Process2", "Process2", NULL, NULL);
         }
         else if (pidb > 0)
         {
             wait(NULL);
-            clock_gettime(0, &fb);
-            time_store_b = (fb.tv_sec - sb.tv_sec) + (fb.tv_nsec - sb.tv_nsec) / power;
+            clock_gettime(0, &finish_b);
+            time_store_b = (finish_b.tv_sec - start_b.tv_sec) + (finish_b.tv_nsec - start_b.tv_nsec) / power;
             file = fopen("file.txt", "a");
             fprintf(file, "b %f\n", time_store_b);
+            clock_gettime(0, &start_c);
             pidc = fork();
             if (pidc == 0)
             {
-                clock_gettime(0, &sc);
                 sched_setscheduler(pidc, SCHED_RR, NULL);
                 execl("./Process3", "Process3", NULL, NULL);
             }
             else if (pidc > 0)
             {
                 wait(NULL);
-                clock_gettime(0, &fc);
-                time_store_c = (fc.tv_sec - sc.tv_sec) + (fc.tv_nsec - sc.tv_nsec) / power;
+                clock_gettime(0, &finish_c);
+                time_store_c = (finish_c.tv_sec - start_c.tv_sec) + (finish_c.tv_nsec - start_c.tv_nsec) / power;
                 file = fopen("file.txt", "a");
                 fprintf(file, "c %f\n", time_store_c);
             }
             else if (pidc < 0)
             {
-                perror("Error in Forking C");
+                // C
+                fprintf(stderr, "fork failed\n");
             }
         }
         else if (pidb < 0)
         {
-            perror("Error in Forking B");
+            // B
+            fprintf(stderr, "fork failed\n");
         }
     }
     else if (pida < 0)
     {
-        perror("Error in Forking A");
+        // A
+        fprintf(stderr, "fork failed\n");
     }
     fclose(file);
     // system("python3 Graph.py");
