@@ -33,7 +33,7 @@ int main()
         pidb = fork();
         if (pidb == 0)
         {
-            sched_setscheduler(pidb, SCHED_FIFO, NULL);
+            sched_setscheduler(pidb, SCHED_RR, NULL);
             execl("./Process2", "Process2", NULL, NULL);
         }
         else if (pidb > 0)
@@ -47,7 +47,7 @@ int main()
             pidc = fork();
             if (pidc == 0)
             {
-                sched_setscheduler(pidc, SCHED_RR, NULL);
+                sched_setscheduler(pidc, SCHED_FIFO, NULL);
                 execl("./Process3", "Process3", NULL, NULL);
             }
             else if (pidc > 0)
