@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <time.h>
@@ -8,9 +9,9 @@
 #define power 1e9
 pid_t pida, pidb, pidc;
 struct timespec start_a, finish_a, start_b, finish_b, start_c, finish_c;
-float time_store_a;
-float time_store_b;
-float time_store_c;
+double time_store_a;
+double time_store_b;
+double time_store_c;
 FILE *file;
 int main()
 {
