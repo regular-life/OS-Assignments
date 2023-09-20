@@ -30,7 +30,7 @@ int main()
         clock_gettime(0, &finish_a);
         time_store_a = (finish_a.tv_sec - start_a.tv_sec) + (finish_a.tv_nsec - start_a.tv_nsec) / power;
         file = fopen("file.txt", "a");
-        fprintf(file, "SCHED_OTHER %f\n", time_store_a);
+        fprintf(file, "SCHED_OTHER %lf\n", time_store_a);
         clock_gettime(0, &start_b);
         pidb = fork();
         if (pidb == 0)
@@ -45,7 +45,7 @@ int main()
             clock_gettime(0, &finish_b);
             time_store_b = (finish_b.tv_sec - start_b.tv_sec) + (finish_b.tv_nsec - start_b.tv_nsec) / power;
             file = fopen("file.txt", "a");
-            fprintf(file, "SCHED_RR %f\n", time_store_b);
+            fprintf(file, "SCHED_RR %lf\n", time_store_b);
             clock_gettime(0, &start_c);
             pidc = fork();
             if (pidc == 0)
@@ -60,7 +60,7 @@ int main()
                 clock_gettime(0, &finish_c);
                 time_store_c = (finish_c.tv_sec - start_c.tv_sec) + (finish_c.tv_nsec - start_c.tv_nsec) / power;
                 file = fopen("file.txt", "a");
-                fprintf(file, "SCHED_FIFO %f\n", time_store_c);
+                fprintf(file, "SCHED_FIFO %lf\n", time_store_c);
             }
             else if (pidc < 0)
             {
