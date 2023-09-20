@@ -8,5 +8,7 @@ clean:
 	-@rm Process2
 	-@rm Process3
 	-@rm a.out
+	-@rm file.txt
 run:
-	./a.out
+	-@rm file.txt
+	taskset -c 3 ./a.out
