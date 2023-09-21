@@ -1,3 +1,7 @@
+#import matplotlib
+#matplotlib.use('TkAgg')
+#uncomment above if Artix
+
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -18,5 +22,7 @@ plt.bar(3, list_values['SCHED_OTHER'], label='SCHED_OTHER')
 plt.xlabel('Scheduling Policy')
 plt.ylabel('Time')
 plt.legend()
+
+plt.ylim(0, 2200000000)
 
 plt.show()
