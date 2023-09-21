@@ -1,4 +1,4 @@
-# Custom Process Scheduler Benchmarking
+# Process Scheduler Benchmarking
 
 This program demonstrates the use of Linux's scheduling policies for different processes. It creates three child processes, each of which performs a counting task. The goal is to benchmark these processes based on different scheduling policies and priorities. The execution times for each process are measured, and the results are displayed in a histogram.
 
