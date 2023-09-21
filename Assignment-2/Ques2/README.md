@@ -66,7 +66,7 @@ This program creates three child processes and assigns them different scheduling
    - This process uses the `SCHED_FIFO` scheduling policy with default priority.
 
 ## Compilation and Execution
-The program is compiled using the provided `Makefile`, and the `a.out` executable is generated. To execute the program, use the `taskset` command to assign it to a specific CPU core.
+The program is compiled using the provided `Makefile`, and the `a.out` executable is generated. `taskset` has been used to ensure that the program runs only on 1 processor - processor number 3.
 
 ## Error Handling
 The program includes error handling for various scenarios, such as failed `fork()` operations. Error messages are printed to `stderr` in case of errors.
