@@ -99,6 +99,6 @@ signed main()
     fprintf(file, "SCHED_OTHER %lf\n", arr[2]);
 
     fclose(file);
-    // system("python3 Graph.py");
+    system("python3 Graph.py");
     return 0;
 }
