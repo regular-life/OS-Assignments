@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 f = open("file.txt", "r")
-list_values = {'SCHED_FIFO': [], 'SCHED_RR': [], 'SCHED_OTHER': []}
+list_values = {'SCHED_FIFO': 0, 'SCHED_RR': 0, 'SCHED_OTHER': 0}
 
 for x in f:
     arr = x.split()
@@ -10,11 +11,9 @@ for x in f:
 
 f.close()
 
-x_labels = range(1)
-
-plt.plot(x_labels, list_values['SCHED_FIFO'], label='SCHED_FIFO')
-plt.plot(x_labels, list_values['SCHED_RR'], label='SCHED_RR')
-plt.plot(x_labels, list_values['SCHED_OTHER'], label='SCHED_OTHER')
+plt.bar(1, list_values['SCHED_FIFO'], label='SCHED_FIFO')
+plt.bar(1.25, list_values['SCHED_RR'], label='SCHED_RR')
+plt.bar(1.5, list_values['SCHED_OTHER'], label='SCHED_OTHER')
 
 plt.xlabel('Scheduling Policy')
 plt.ylabel('Time')
