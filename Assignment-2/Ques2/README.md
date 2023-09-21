@@ -14,35 +14,49 @@ This program demonstrates the use of Linux's scheduling policies for different p
 This program creates three child processes and assigns them different scheduling policies and priorities. Each child process performs a counting task from 1 to 2<sup>32</sup>. The parent process measures the execution times of these child processes and displays the results in a histogram.
 
 ## How to Run the Application
-1. **Environment:**
-   - Ensure that you are running this program in a Linux environment.
+1. **Prequisites:**
+   - Linux based OS.
+   - GCC compiler on the system.
+   - Linux-header files on the system.
 
-2. **Compilation:**
+2. **Cloning the Repository:**
+   - Clone the repository to your local machine using the following command:
+     ```bash
+     git clone https://github.com/regular-life/OS-Assignments.git
+     ```
+     **OR**
+   - Download the .zip file from https://github.com/regular-life/OS-Assignments.
+   
+3. **Opening the Project:**
+   - Unzip the file and navigate to "Assignment-2" -> "Ques3".
+   - Right-click on the screen and select "Go to terminal here" (or any other similar option).
+
+4. **Compilation:**
    - Compile the program using the provided Makefile:
      ```bash
      make all
      ```
 
-3. **Execution:**
+5. **Execution:**
    - Run the program using the following command:
      ```bash
-     sudo taskset -c 3 ./a.out
+     make run
      ```
-     - The `taskset` command ensures that the program runs on a specific CPU core (`core 3` in this example).
 
-4. **View Results:**
+6. **View Results:**
    - After execution, the program generates a histogram to compare the execution times of processes with different scheduling policies.
    - The histogram is displayed using Python and Matplotlib.
+![Error](https://github.com/regular-life/OS-Assignments/blob/main/Assignment-2/Ques2/Figure_1.png)
 
 ## Process Descriptions
 1. **Process 1 (SCHED_OTHER):**
-   - This process uses the SCHED_OTHER scheduling policy with standard priority (nice: 0).
+   - This process uses the `SCHED_OTHER` scheduling policy with standard priority `(nice: 0)`.
 
 2. **Process 2 (SCHED_RR):**
-   - This process uses the SCHED_RR scheduling policy with default priority.
+   - This process uses the `SCHED_RR` scheduling policy with default priority.
 
 3. **Process 3 (SCHED_FIFO):**
-   - This process uses the SCHED_FIFO scheduling policy with default priority.
+   - This process uses the `SCHED_FIFO` scheduling policy with default priority.
 
 ## Compilation and Execution
 The program is compiled using the provided Makefile, and the `a.out` executable is generated. To execute the program, use the `taskset` command to assign it to a specific CPU core.
