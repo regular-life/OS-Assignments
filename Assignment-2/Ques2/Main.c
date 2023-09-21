@@ -25,14 +25,14 @@ void count(int policy_name)
     }
     else if (policy_name == 1)
     {
-        nice(0);
+        //nice(0);
         sched_setscheduler(getpid(), SCHED_RR, NULL);
         clock_gettime(0, &start_b);
         execl("./Process1", "Process1", NULL, NULL);
     }
     else if (policy_name == 2)
     {
-        nice(0);
+        //nice(0);
         sched_setscheduler(getpid(), SCHED_FIFO, NULL);
         clock_gettime(0, &start_c);
         execl("./Process1", "Process1", NULL, NULL);
@@ -81,7 +81,7 @@ signed main()
         graph_banau++;
     }
     file = fopen("file.txt", "w");
-    
+    // print time in seconds
     fprintf(file, "SCHED_OTHER %lf\n", finish_a.tv_sec - start_a.tv_sec + (finish_a.tv_nsec - start_a.tv_nsec) / power);
     fprintf(file, "SCHED_RR %lf\n", finish_b.tv_sec - start_b.tv_sec + (finish_b.tv_nsec - start_b.tv_nsec) / power);
     fprintf(file, "SCHED_FIFO %lf\n", finish_c.tv_sec - start_c.tv_sec + (finish_c.tv_nsec - start_c.tv_nsec) / power);
