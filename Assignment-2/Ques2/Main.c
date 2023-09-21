@@ -28,14 +28,14 @@ void count(int policy_name)
         //nice(0);
         sched_setscheduler(getpid(), SCHED_RR, NULL);
         clock_gettime(0, &start_b);
-        execl("./Process1", "Process1", NULL, NULL);
+        execl("./Process2", "Process1", NULL, NULL);
     }
     else if (policy_name == 2)
     {
         //nice(0);
         sched_setscheduler(getpid(), SCHED_FIFO, NULL);
         clock_gettime(0, &start_c);
-        execl("./Process1", "Process1", NULL, NULL);
+        execl("./Process3", "Process1", NULL, NULL);
     }
 }
 
@@ -46,16 +46,14 @@ signed main()
     pida = fork();
     if (pida == 0)
     {
-        count(0);
-        
+        count(0);        
     }
     else if (pida > 0)
     {
         pidb = fork();
         if (pidb == 0)
         {
-            count(1);
-            
+            count(1);            
         }
         else if (pidb > 0)
         {
@@ -63,8 +61,7 @@ signed main()
             pidc = fork();
             if (pidc == 0)
             {
-                count(2);
-                
+                count(2);                
             }
             else if (pidc > 0)
             {
