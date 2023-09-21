@@ -28,14 +28,14 @@ void count(int policy_name)
         //nice(0);
         sched_setscheduler(getpid(), SCHED_RR, NULL);
         
-        execl("./Process2", "Process1", NULL, NULL);
+        execl("./Process2", "Process2", NULL, NULL);
     }
     else if (policy_name == 2)
     {
         //nice(0);
         sched_setscheduler(getpid(), SCHED_FIFO, NULL);
         
-        execl("./Process3", "Process1", NULL, NULL);
+        execl("./Process3", "Process3", NULL, NULL);
     }
 }
 
