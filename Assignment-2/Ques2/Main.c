@@ -18,6 +18,7 @@ signed main()
 {
     clock_gettime(0, &start_a);
     double arr[3] ;
+    int graph_banau = 0 ;
     pida = fork();
     file = fopen("file.txt", "a");
     if (pida == 0)
@@ -33,7 +34,9 @@ signed main()
         clock_gettime(0, &finish_a);
         time_store_a = (finish_a.tv_sec - start_a.tv_sec) + (finish_a.tv_nsec - start_a.tv_nsec) / power;
         arr[0] = time_store_a;
-        
+
+        graph_banau++;
+
         clock_gettime(0, &start_b);
         pidb = fork();
         if (pidb == 0)
@@ -49,6 +52,8 @@ signed main()
             time_store_b = (finish_b.tv_sec - start_b.tv_sec) + (finish_b.tv_nsec - start_b.tv_nsec) / power;
             arr[1] = time_store_b;
             
+            graph_banau++;
+
             clock_gettime(0, &start_c);
             pidc = fork();
             if (pidc == 0)
@@ -63,6 +68,9 @@ signed main()
                 clock_gettime(0, &finish_c);
                 time_store_c = (finish_c.tv_sec - start_c.tv_sec) + (finish_c.tv_nsec - start_c.tv_nsec) / power;
                 arr[2] = time_store_c;
+
+                graph_banau++;
+
             }
             else if (pidc < 0)
             {
@@ -98,6 +106,9 @@ signed main()
     fprintf(file, "SCHED_OTHER %lf\n", arr[2]);
 
     fclose(file);
-    system("python3 Graph.py");
+    if (graph_banau == 3)
+    {
+        system("python3 Graph.py");
+    }
     return 0;
 }
