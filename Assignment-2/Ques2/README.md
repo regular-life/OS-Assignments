@@ -9,6 +9,7 @@ This program demonstrates the use of Linux's scheduling policies for different p
 4. [Compilation and Execution](#compilation-and-execution)
 5. [Error Handling](#error-handling)
 6. [Conclusion](#conclusion)
+7. [Contributors](#contributors)
 
 ## Introduction
 This program creates three child processes and assigns them different scheduling policies and priorities. Each child process performs a counting task from 1 to 2<sup>32</sup>. The parent process measures the execution times of these child processes and displays the results in a histogram.
@@ -66,3 +67,13 @@ The program includes error handling for various scenarios, such as failed fork o
 
 ## Conclusion
 This program demonstrates the use of different scheduling policies in Linux for managing and benchmarking processes. By comparing the execution times of processes with different scheduling policies, it provides insights into process scheduling in the Linux operating system.
+
+<br />
+
+---
+
+## Contributors
+- Yash Bhardwaj - [GitHub Profile](https://github.com/regular-life)
+- Sanyam Garg - [GitHub Profile](https://github.com/SanyamGarg12)
+
+Feel free to reach to any of us at sanyam22448@iiitd.ac.in or yash22586@iiitd.ac.in for any questions or issues related to the above assignment.
