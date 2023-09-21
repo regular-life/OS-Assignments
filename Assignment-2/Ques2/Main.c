@@ -48,7 +48,6 @@ signed main()
     if (pida == 0)
     {
         count(0);
-        
     }
     else if (pida > 0)
     {
@@ -74,16 +73,27 @@ signed main()
                 clock_gettime(0, &finish_c);
                 graph_banau++;
             }
+            else
+            {
+                perr("fork error");
+            }
             int w2 = wait(NULL);
             clock_gettime(0, &finish_b);
             graph_banau++;
+        }
+        else
+        {
+            perr("fork error");
         }
         int w1 = wait(NULL);
         clock_gettime(0, &finish_a);
         graph_banau++;
     }
+    else
+    {
+        perr("fork error");
+    }
     file = fopen("file.txt", "w");
-    // print time in seconds
     fprintf(file, "SCHED_OTHER %lf\n", finish_a.tv_sec - start_a.tv_sec + (finish_a.tv_nsec - start_a.tv_nsec) / power);
     fprintf(file, "SCHED_RR %lf\n", finish_b.tv_sec - start_b.tv_sec + (finish_b.tv_nsec - start_b.tv_nsec) / power);
     fprintf(file, "SCHED_FIFO %lf\n", finish_c.tv_sec - start_c.tv_sec + (finish_c.tv_nsec - start_c.tv_nsec) / power);
