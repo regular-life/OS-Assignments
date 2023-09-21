@@ -1,28 +1,23 @@
 import matplotlib.pyplot as plt
-import numpy as np
 
-barThick = 0.25
+f = open("file.txt", "r")
+list_values = {'SCHED_FIFO': [], 'SCHED_RR': [], 'SCHED_OTHER': []}
 
-list_fifo = []
-list_other = []
-list_rr = []
-f = open("file.txt","r")
 for x in f:
-    temp = x.split()
-    if(temp[0]=='SCHED_FIFO'):
-        list_fifo.append(float(temp[1]))
-    if(temp[0]=='SCHED_RR'):
-        list_rr.append(float(temp[1]))
-    if(temp[0]=='SCHED_OTHER'):
-        list_other.append(float(temp[1]))
+    arr = x.split()
+    if arr[0] in list_values:
+        list_values[arr[0]].append(float(arr[1]))
 
-br1 = np.arange(len(list_fifo))
-br2 = [x + barThick for x in br1]
-br3 = [x + barThick for x in br2]
+f.close()
 
-plt.bar(br1,list_fifo,color='r',width=barThick,label="FIFO")
-plt.bar(br2,list_rr,color='b',width=barThick,label="RR")
-plt.bar(br3,list_other,color='g',width=barThick,label="OTHER")
-plt.ylabel("Time Taken")
+x_labels = range(len(list_values['SCHED_FIFO']))
+
+plt.plot(x_labels, list_values['SCHED_FIFO'], label='SCHED_FIFO')
+plt.plot(x_labels, list_values['SCHED_RR'], label='SCHED_RR')
+plt.plot(x_labels, list_values['SCHED_OTHER'], label='SCHED_OTHER')
+
+plt.xlabel('Index')
+plt.ylabel('Time')
 plt.legend()
+
 plt.show()
