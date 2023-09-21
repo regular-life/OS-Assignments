@@ -1,5 +1,6 @@
-import matplotlib
-matplotlib.use('TkAgg')
+#import matplotlib
+#matplotlib.use('TkAgg')
+#uncomment above if Artix
 import matplotlib.pyplot as plt
 import numpy as np
 
