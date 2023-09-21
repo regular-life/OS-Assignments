@@ -10,5 +10,5 @@ clean:
 	-@rm a.out
 	-@rm file.txt
 run:
-	-@rm file.txt
-	taskset -c 3 ./a.out
+	sudo rm -f file.txt
+	sudo taskset -c 3 ./a.out
