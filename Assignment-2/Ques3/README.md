@@ -35,7 +35,7 @@ This is a writeup for making kernel module in C language as part of the **IIITD 
    - The kernel module files have been made.
    - Now, write the following command on terminal to load the module in kernel:
      ```bash
-      sudo insmod code.ko
+      sudo insmod Main.ko
      ```
    - The module has been loaded on the kernel. To verify, type the following on terminal and search for `code` in the list (It's likely to appear at the top):
      ```bash
@@ -49,7 +49,7 @@ This is a writeup for making kernel module in C language as part of the **IIITD 
    - A long list will appear on the terminal and you will see the the number of currently active processes at the bottom.
    - To unload the module from the kernel, type the following:
      ```bash
-     sudo rmmod code.ko
+     sudo rmmod Main.ko
      ```
    - To verify that the module has been unloaded, type the following on terminal:
      ```bash
