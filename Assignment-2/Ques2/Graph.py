@@ -12,8 +12,8 @@ for x in f:
 f.close()
 
 plt.bar(1, list_values['SCHED_FIFO'], label='SCHED_FIFO')
-plt.bar(1.25, list_values['SCHED_RR'], label='SCHED_RR')
-plt.bar(1.5, list_values['SCHED_OTHER'], label='SCHED_OTHER')
+plt.bar(2, list_values['SCHED_RR'], label='SCHED_RR')
+plt.bar(3, list_values['SCHED_OTHER'], label='SCHED_OTHER')
 
 plt.xlabel('Scheduling Policy')
 plt.ylabel('Time')
