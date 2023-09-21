@@ -1,4 +1,4 @@
-obj-m += code.o
+obj-m += Main.o
 
 PWD := $(CURDIR)
 
