@@ -13,13 +13,16 @@ double time_store_a;
 double time_store_b;
 double time_store_c;
 FILE *file;
-int main()
+
+signed main()
 {
     clock_gettime(0, &start_a);
+    double arr[3] ;
     pida = fork();
+    file = fopen("file.txt", "a");
     if (pida == 0)
     {
-        nice(0);
+        //nice(0);
         sched_setscheduler(getpid(), SCHED_OTHER, NULL);
         execl("./Process1", "Process1", NULL, NULL);
     }
@@ -29,14 +32,14 @@ int main()
         waitpid(pida, &sts1, 0);
         clock_gettime(0, &finish_a);
         time_store_a = (finish_a.tv_sec - start_a.tv_sec) + (finish_a.tv_nsec - start_a.tv_nsec) / power;
-        file = fopen("file.txt", "a");
-        fprintf(file, "SCHED_OTHER %lf\n", time_store_a);
+        arr[0] = time_store_a;
+        
         clock_gettime(0, &start_b);
         pidb = fork();
         if (pidb == 0)
         {
             sched_setscheduler(getpid(), SCHED_RR, NULL);
-            execl("./Process1", "Process1", NULL, NULL);
+            execl("./Process2", "Process2", NULL, NULL);
         }
         else if (pidb > 0)
         {
@@ -44,14 +47,14 @@ int main()
             waitpid(pidb, &sts2, 0);
             clock_gettime(0, &finish_b);
             time_store_b = (finish_b.tv_sec - start_b.tv_sec) + (finish_b.tv_nsec - start_b.tv_nsec) / power;
-            file = fopen("file.txt", "a");
-            fprintf(file, "SCHED_RR %lf\n", time_store_b);
+            arr[1] = time_store_b;
+            
             clock_gettime(0, &start_c);
             pidc = fork();
             if (pidc == 0)
             {
                 sched_setscheduler(getpid(), SCHED_FIFO, NULL);
-                execl("./Process1", "Process1", NULL, NULL);
+                execl("./Process3", "Process3", NULL, NULL);
             }
             else if (pidc > 0)
             {
@@ -59,8 +62,7 @@ int main()
                 waitpid(pidc, &sts3, 0);
                 clock_gettime(0, &finish_c);
                 time_store_c = (finish_c.tv_sec - start_c.tv_sec) + (finish_c.tv_nsec - start_c.tv_nsec) / power;
-                file = fopen("file.txt", "a");
-                fprintf(file, "SCHED_FIFO %lf\n", time_store_c);
+                arr[2] = time_store_c;
             }
             else if (pidc < 0)
             {
@@ -79,6 +81,23 @@ int main()
         // A
         fprintf(stderr, "fork failed\n");
     }
+    // sort arr
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = i; j < 3; j++)
+        {
+            if (arr[i] > arr[j])
+            {
+                double temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+    }
+    fprintf(file, "SCHED_FIFO %lf\n", arr[0]);
+    fprintf(file, "SCHED_RR %lf\n", arr[1]);
+    fprintf(file, "SCHED_OTHER %lf\n", arr[2]);
+
     fclose(file);
     // system("python3 Graph.py");
     return 0;
