@@ -49,6 +49,12 @@ This program creates three child processes and assigns them different scheduling
    - The histogram is displayed using Python and Matplotlib.
 ![Error](https://github.com/regular-life/OS-Assignments/blob/main/Assignment-2/Ques2/Figure_1.png)
 
+7. **Delete executables:**
+   - Delete the executables using the following:
+     ```bash
+     make clean
+     ```
+
 ## Process Descriptions
 1. **Process 1 (SCHED_OTHER):**
    - This process uses the `SCHED_OTHER` scheduling policy with standard priority `(nice: 0)`.
@@ -60,10 +66,10 @@ This program creates three child processes and assigns them different scheduling
    - This process uses the `SCHED_FIFO` scheduling policy with default priority.
 
 ## Compilation and Execution
-The program is compiled using the provided Makefile, and the `a.out` executable is generated. To execute the program, use the `taskset` command to assign it to a specific CPU core.
+The program is compiled using the provided `Makefile`, and the `a.out` executable is generated. To execute the program, use the `taskset` command to assign it to a specific CPU core.
 
 ## Error Handling
-The program includes error handling for various scenarios, such as failed fork operations. Error messages are printed to stderr in case of errors.
+The program includes error handling for various scenarios, such as failed `fork()` operations. Error messages are printed to `stderr` in case of errors.
 
 ## Conclusion
 This program demonstrates the use of different scheduling policies in Linux for managing and benchmarking processes. By comparing the execution times of processes with different scheduling policies, it provides insights into process scheduling in the Linux operating system.
