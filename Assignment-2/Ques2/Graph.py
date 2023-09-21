@@ -21,6 +21,6 @@ plt.xlabel('Scheduling Policy')
 plt.ylabel('Time')
 plt.legend()
 
-plt.ylim(0, 11)
+plt.ylim(0, 30)
 
 plt.show()
