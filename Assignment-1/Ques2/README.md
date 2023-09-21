@@ -24,7 +24,7 @@ This is a writeup for the implementation of three custom shell commands (`word`,
      git clone https://github.com/regular-life/OS-Assignments.git
      ```
      **OR**
-   - Download the .zip file from https://github.com/regular-life/AP-Assignments.
+   - Download the .zip file from https://github.com/regular-life/OS-Assignments.
 3. **Opening the Project:**
    - Unzip the file and navigate to "Assignment-1" -> "Ques2".
    - Right-click on the screen and select "Open Terminal here" (or any other similar option).
