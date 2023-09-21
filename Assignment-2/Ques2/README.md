@@ -11,7 +11,7 @@ This program demonstrates the use of Linux's scheduling policies for different p
 6. [Conclusion](#conclusion)
 
 ## Introduction
-This program creates three child processes and assigns them different scheduling policies and priorities. Each child process performs a counting task from 1 to 2^32. The parent process measures the execution times of these child processes and displays the results in a histogram.
+This program creates three child processes and assigns them different scheduling policies and priorities. Each child process performs a counting task from 1 to 2<sup>32</sup>. The parent process measures the execution times of these child processes and displays the results in a histogram.
 
 ## How to Run the Application
 1. **Environment:**
