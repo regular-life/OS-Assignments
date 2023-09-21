@@ -20,21 +20,21 @@ void count(int policy_name)
     {
         nice(0);
         sched_setscheduler(getpid(), SCHED_OTHER, NULL);
-        clock_gettime(0, &start_a);
+        
         execl("./Process1", "Process1", NULL, NULL);
     }
     else if (policy_name == 1)
     {
         //nice(0);
         sched_setscheduler(getpid(), SCHED_RR, NULL);
-        clock_gettime(0, &start_b);
+        
         execl("./Process2", "Process1", NULL, NULL);
     }
     else if (policy_name == 2)
     {
         //nice(0);
         sched_setscheduler(getpid(), SCHED_FIFO, NULL);
-        clock_gettime(0, &start_c);
+        
         execl("./Process3", "Process1", NULL, NULL);
     }
 }
@@ -43,25 +43,30 @@ signed main()
 {
     int graph_banau = 0;
 
+    clock_gettime(0, &start_a);
     pida = fork();
     if (pida == 0)
     {
-        count(0);        
+        count(0);
+        
     }
     else if (pida > 0)
     {
+        clock_gettime(0, &start_b);
         pidb = fork();
         if (pidb == 0)
         {
-            count(1);            
+            count(1);
+            
         }
         else if (pidb > 0)
         {
-
+            clock_gettime(0, &start_c);
             pidc = fork();
             if (pidc == 0)
             {
-                count(2);                
+                count(2);
+                
             }
             else if (pidc > 0)
             {
