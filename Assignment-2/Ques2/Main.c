@@ -14,97 +14,77 @@ double time_store_b;
 double time_store_c;
 FILE *file;
 
+void count(int policy_name)
+{
+    if (policy_name == 0)
+    {
+        nice(0);
+        sched_setscheduler(getpid(), SCHED_OTHER, NULL);
+        clock_gettime(0, &start_a);
+        execl("./Process1", "Process1", NULL, NULL);
+    }
+    else if (policy_name == 1)
+    {
+        nice(0);
+        sched_setscheduler(getpid(), SCHED_RR, NULL);
+        clock_gettime(0, &start_b);
+        execl("./Process1", "Process1", NULL, NULL);
+    }
+    else if (policy_name == 2)
+    {
+        nice(0);
+        sched_setscheduler(getpid(), SCHED_FIFO, NULL);
+        clock_gettime(0, &start_c);
+        execl("./Process1", "Process1", NULL, NULL);
+    }
+}
+
 signed main()
 {
-    clock_gettime(0, &start_a);
-    double arr[3] ;
-    int graph_banau = 0 ;
+    int graph_banau = 0;
+
     pida = fork();
-    file = fopen("file.txt", "a");
     if (pida == 0)
     {
-        //nice(0);
-        sched_setscheduler(getpid(), SCHED_OTHER, NULL);
-        execl("./Process1", "Process1", NULL, NULL);
+        count(0);
+        
     }
     else if (pida > 0)
     {
-        int sts1;
-        waitpid(pida, &sts1, 0);
-        clock_gettime(0, &finish_a);
-        time_store_a = (finish_a.tv_sec - start_a.tv_sec) + (finish_a.tv_nsec - start_a.tv_nsec) / power;
-        arr[0] = time_store_a;
-
-        graph_banau++;
-
-        clock_gettime(0, &start_b);
         pidb = fork();
         if (pidb == 0)
         {
-            sched_setscheduler(getpid(), SCHED_RR, NULL);
-            execl("./Process2", "Process2", NULL, NULL);
+            count(1);
+            
         }
         else if (pidb > 0)
         {
-            int sts2;
-            waitpid(pidb, &sts2, 0);
-            clock_gettime(0, &finish_b);
-            time_store_b = (finish_b.tv_sec - start_b.tv_sec) + (finish_b.tv_nsec - start_b.tv_nsec) / power;
-            arr[1] = time_store_b;
-            
-            graph_banau++;
 
-            clock_gettime(0, &start_c);
             pidc = fork();
             if (pidc == 0)
             {
-                sched_setscheduler(getpid(), SCHED_FIFO, NULL);
-                execl("./Process3", "Process3", NULL, NULL);
+                count(2);
+                
             }
             else if (pidc > 0)
             {
-                int sts3;
-                waitpid(pidc, &sts3, 0);
+                int w3 = wait(NULL);
                 clock_gettime(0, &finish_c);
-                time_store_c = (finish_c.tv_sec - start_c.tv_sec) + (finish_c.tv_nsec - start_c.tv_nsec) / power;
-                arr[2] = time_store_c;
-
                 graph_banau++;
-
             }
-            else if (pidc < 0)
-            {
-                // C
-                fprintf(stderr, "fork failed\n");
-            }
+            int w2 = wait(NULL);
+            clock_gettime(0, &finish_b);
+            graph_banau++;
         }
-        else if (pidb < 0)
-        {
-            // B
-            fprintf(stderr, "fork failed\n");
-        }
+        int w1 = wait(NULL);
+        clock_gettime(0, &finish_a);
+        graph_banau++;
     }
-    else if (pida < 0)
-    {
-        // A
-        fprintf(stderr, "fork failed\n");
-    }
-    for (int i = 0; i < 3; i++)
-    {
-        for (int j = i; j < 3; j++)
-        {
-            if (arr[i] > arr[j])
-            {
-                double temp = arr[i];
-                arr[i] = arr[j];
-                arr[j] = temp;
-            }
-        }
-    }
-    fprintf(file, "SCHED_FIFO %lf\n", arr[0]);
-    fprintf(file, "SCHED_RR %lf\n", arr[1]);
-    fprintf(file, "SCHED_OTHER %lf\n", arr[2]);
-
+    file = fopen("file.txt", "w");
+    
+    fprintf(file, "SCHED_OTHER %lf\n", finish_a.tv_sec - start_a.tv_sec + (finish_a.tv_nsec - start_a.tv_nsec) / power);
+    fprintf(file, "SCHED_RR %lf\n", finish_b.tv_sec - start_b.tv_sec + (finish_b.tv_nsec - start_b.tv_nsec) / power);
+    fprintf(file, "SCHED_FIFO %lf\n", finish_c.tv_sec - start_c.tv_sec + (finish_c.tv_nsec - start_c.tv_nsec) / power);
     fclose(file);
     if (graph_banau == 3)
     {
