@@ -75,7 +75,7 @@ signed main()
             }
             else
             {
-                perr("fork error");
+                perror("fork error");
             }
             int w2 = wait(NULL);
             clock_gettime(0, &finish_b);
@@ -83,7 +83,7 @@ signed main()
         }
         else
         {
-            perr("fork error");
+            perror("fork error");
         }
         int w1 = wait(NULL);
         clock_gettime(0, &finish_a);
@@ -91,7 +91,7 @@ signed main()
     }
     else
     {
-        perr("fork error");
+        perror("fork error");
     }
     file = fopen("file.txt", "w");
     fprintf(file, "SCHED_OTHER %lf\n", finish_a.tv_sec - start_a.tv_sec + (finish_a.tv_nsec - start_a.tv_nsec) / power);
