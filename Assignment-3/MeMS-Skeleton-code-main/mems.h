@@ -24,12 +24,12 @@ typedef struct subNode
 
 typedef struct Node
 {
-    int size;
     struct Node *next;
     subNode *sideChain;
 } Node;
 
-Node *head;
+static Node *head;
+static int pages = 1;
 /*
 Use this macro where ever you need PAGE_SIZE.
 As PAGESIZE can differ system to system we should have flexibility to modify this
@@ -47,7 +47,13 @@ Returns: Nothing
 */
 void mems_init()
 {
-    head = (Node *)mmap(NULL, sizeof(Node), PROT_READ | PROT_WRITE, MAP_PRIVATE, -1, 0);
+    head = (Node *)mmap(NULL, sizeof(Node), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+    // head = (Node *)malloc(sizeof(Node));
+    if (head == MAP_FAILED)
+    {
+        perror("Error in mmap for head");
+        exit(EXIT_FAILURE);
+    }
     head->sideChain = NULL;
     head->next = NULL;
 }
@@ -62,7 +68,6 @@ void mems_finish()
 {
     munmap(head, sizeof(Node));
     munmap(head->sideChain, PAGE_SIZE);
-
 }
 
 /*
@@ -80,12 +85,17 @@ Returns: MeMS Virtual address (that is created by MeMS)
 void *mems_malloc(size_t size)
 {
     Node *curr = head;
-    while (curr->next != NULL)
+    while (curr != NULL)
     {
-
         if (curr->sideChain == NULL)
         {
-            head->sideChain = (subNode *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE, -1, 0);
+            subNode *newChain = (subNode *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+            if (newChain == MAP_FAILED)
+            {
+                perror("Error in map for creating head\n");
+                exit(EXIT_FAILURE);
+            }
+            head->sideChain = newChain;
             head->sideChain->size = size;
             head->sideChain->type = PROCESS;
             head->sideChain->next = NULL;
@@ -102,7 +112,13 @@ void *mems_malloc(size_t size)
             }
             if (val + size <= PAGE_SIZE)
             {
-                currChain->next = (subNode *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE, -1, 0);
+                subNode *nextSub = (subNode *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+                if (nextSub == MAP_FAILED)
+                {
+                    perror("Error in map for creating new sideChain node\n");
+                    exit(EXIT_FAILURE);
+                }
+                currChain->next = nextSub;
                 currChain->next->size = size;
                 currChain->next->type = PROCESS;
                 currChain->next->next = NULL;
@@ -110,7 +126,14 @@ void *mems_malloc(size_t size)
             }
             else
             {
-                curr->next = (Node *)mmap(NULL, sizeof(Node), PROT_READ | PROT_WRITE, MAP_PRIVATE, -1, 0);
+                Node *nextNode = (Node *)mmap(NULL, sizeof(Node), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+                if (nextNode == MAP_FAILED)
+                {
+                    perror("Error in map for creating new page\n");
+                    exit(EXIT_FAILURE);
+                }
+                pages++;
+                curr->next = nextNode;
                 curr->next->next = NULL;
                 curr->next->sideChain = NULL;
             }
@@ -129,6 +152,7 @@ Returns: Nothing but should print the necessary information on STDOUT
 */
 void mems_print_stats()
 {
+    printf("Number of pages used : %d\n", pages);
 }
 
 /*
@@ -138,6 +162,7 @@ Returns: MeMS physical address mapped to the passed ptr (MeMS virtual address).
 */
 void *mems_get(void *v_ptr)
 {
+    return v_ptr;
 }
 
 /*
