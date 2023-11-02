@@ -30,6 +30,7 @@ typedef struct Node
 
 static Node *head;
 static int pages = 1;
+static void * v_addr = 0;
 /*
 Use this macro where ever you need PAGE_SIZE.
 As PAGESIZE can differ system to system we should have flexibility to modify this
@@ -90,6 +91,7 @@ void *mems_malloc(size_t size)
         if (curr->sideChain == NULL)
         {
             subNode *newChain = (subNode *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+            v_addr += size;
             if (newChain == MAP_FAILED)
             {
                 perror("Error in map for creating head\n");
@@ -99,7 +101,7 @@ void *mems_malloc(size_t size)
             head->sideChain->size = size;
             head->sideChain->type = PROCESS;
             head->sideChain->next = NULL;
-            return head->sideChain;
+            return v_addr;
         }
         else
         {
@@ -113,6 +115,7 @@ void *mems_malloc(size_t size)
             if (val + size <= PAGE_SIZE)
             {
                 subNode *nextSub = (subNode *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+                v_addr+=size;
                 if (nextSub == MAP_FAILED)
                 {
                     perror("Error in map for creating new sideChain node\n");
@@ -122,11 +125,12 @@ void *mems_malloc(size_t size)
                 currChain->next->size = size;
                 currChain->next->type = PROCESS;
                 currChain->next->next = NULL;
-                return currChain->next;
+                return  v_addr;
             }
             else
             {
                 Node *nextNode = (Node *)mmap(NULL, sizeof(Node), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+                v_addr+=size;
                 if (nextNode == MAP_FAILED)
                 {
                     perror("Error in map for creating new page\n");
@@ -162,6 +166,7 @@ Returns: MeMS physical address mapped to the passed ptr (MeMS virtual address).
 */
 void *mems_get(void *v_ptr)
 {
+    printf("chut %d\n",v_ptr);
     return v_ptr;
 }
 
