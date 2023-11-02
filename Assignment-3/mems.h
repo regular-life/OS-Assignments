@@ -30,7 +30,7 @@ typedef struct Node
 
 static Node *head;
 static int pages = 1;
-static void * v_addr = 0;
+static void *v_addr = 0;
 /*
 Use this macro where ever you need PAGE_SIZE.
 As PAGESIZE can differ system to system we should have flexibility to modify this
@@ -115,7 +115,7 @@ void *mems_malloc(size_t size)
             if (val + size <= PAGE_SIZE)
             {
                 subNode *nextSub = (subNode *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
-                v_addr+=size;
+                v_addr += size;
                 if (nextSub == MAP_FAILED)
                 {
                     perror("Error in map for creating new sideChain node\n");
@@ -125,12 +125,12 @@ void *mems_malloc(size_t size)
                 currChain->next->size = size;
                 currChain->next->type = PROCESS;
                 currChain->next->next = NULL;
-                return  v_addr;
+                return v_addr;
             }
             else
             {
                 Node *nextNode = (Node *)mmap(NULL, sizeof(Node), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
-                v_addr+=size;
+                v_addr += size;
                 if (nextNode == MAP_FAILED)
                 {
                     perror("Error in map for creating new page\n");
@@ -167,7 +167,24 @@ Returns: MeMS physical address mapped to the passed ptr (MeMS virtual address).
 void *mems_get(void *v_ptr)
 {
     printf("chut %d\n",v_ptr);
-    return v_ptr;
+    void * trace_vaddr = 0;
+    Node *curr = head;
+    while (curr != NULL)
+    {
+        subNode *currChain = curr->sideChain;
+        while (currChain != NULL)
+        {
+            if (trace_vaddr >= v_ptr)
+            {
+                return currChain;
+            }
+            trace_vaddr += currChain->size;
+            currChain = currChain->next;
+        }
+        curr = curr->next;
+    }
+    printf("Invalis v_ptr\n");
+    return (void *)-1;
 }
 
 /*
