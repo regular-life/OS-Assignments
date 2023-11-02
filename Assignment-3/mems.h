@@ -107,11 +107,12 @@ void *mems_malloc(size_t size)
         {
             subNode *currChain = curr->sideChain;
             int val = 0;
-            while (currChain->next != NULL)
+            while (currChain->next!= NULL)
             {
                 val += currChain->size;
                 currChain = currChain->next;
             }
+            val+=currChain->size;
             if (val + size <= PAGE_SIZE)
             {
                 subNode *nextSub = (subNode *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
@@ -130,7 +131,7 @@ void *mems_malloc(size_t size)
             else
             {
                 Node *nextNode = (Node *)mmap(NULL, sizeof(Node), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
-                v_addr += size;
+                v_addr += 96;
                 if (nextNode == MAP_FAILED)
                 {
                     perror("Error in map for creating new page\n");
@@ -166,8 +167,8 @@ Returns: MeMS physical address mapped to the passed ptr (MeMS virtual address).
 */
 void *mems_get(void *v_ptr)
 {
-    printf("chut %d\n",v_ptr);
-    void * trace_vaddr = 0;
+    printf("chut %d\n", v_ptr);
+    void *trace_vaddr = 0;
     Node *curr = head;
     while (curr != NULL)
     {
@@ -181,10 +182,11 @@ void *mems_get(void *v_ptr)
             trace_vaddr += currChain->size;
             currChain = currChain->next;
         }
+        trace_vaddr+=96;
         curr = curr->next;
     }
-    printf("Invalis v_ptr\n");
-    return (void *)-1;
+    printf("Invalid v_ptr\n");
+    return (void *)(-1);
 }
 
 /*
