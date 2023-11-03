@@ -1,5 +1,5 @@
 // include other header files as needed
-#include"mems.h"
+#include"mems3.h"
 
 
 int main(int argc, char const *argv[])
@@ -13,6 +13,7 @@ int main(int argc, char const *argv[])
     */
     printf("\n------- Allocated virtual addresses [mems_malloc] -------\n");
     for(int i=0;i<10;i++){
+    printList();
         ptr[i] = (int*)mems_malloc(sizeof(int)*250);
         printf("Virtual address: %lu\n", (unsigned long)ptr[i]);
     }
