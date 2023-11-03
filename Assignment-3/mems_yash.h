@@ -47,8 +47,8 @@ typedef struct Page
 	int numProcesses ;
 	void* starting_address ;
 	void* ending_address ;
-	void* next_page ;
-	void* prev_page ;
+	struct Page* next_page ;
+	struct Page* prev_page ;
 }
 
 typedef struct mainNode
