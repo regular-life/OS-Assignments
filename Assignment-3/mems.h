@@ -277,9 +277,15 @@ void *mems_get(void *v_ptr)
     {
         int count = 0;
         subNode *chain = curr->sideChain;
+        subNode *prev = NULL;
         while (chain != NULL)
         {
             trace_addr += chain->size;
+            if (trace_addr >= v_ptr)
+            {
+                return chain;
+            }
+            prev = chain;
             chain = chain->next;
         }
         curr = curr->next;
