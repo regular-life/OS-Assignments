@@ -68,7 +68,6 @@ void mems_init()
 {
     head = (Node *)mmap(NULL, sizeof(Node), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
     head->pages = 0;
-    // head = (Node *)malloc(sizeof(Node));
     if (head == MAP_FAILED)
     {
         perror("Error in mmap for head");
@@ -225,6 +224,44 @@ Returns: Nothing but should print the necessary information on STDOUT
 void mems_print_stats()
 {
     printf("Number of pages used : %d\n", pages);
+    printf("Details -> \n", 0);
+    Node *curr = head->next;
+    int i = 1;
+    while (curr != NULL)
+    {
+        printf("Node: %d Pages : %d\n", i++, curr->pages);
+        subNode *currChain = curr->sideChain;
+        while (currChain != NULL)
+        {
+            // printf("Chain: %d\n", currChain);
+            if (currChain->type == PROCESS)
+            {
+                printf("Process of size : %d\n", currChain->size);
+            }
+            else
+            {
+                printf("Hole of size : %d\n", currChain->size);
+            }
+            currChain = currChain->next;
+        }
+        curr = curr->next;
+    }
+    printf("Unused space of each Node ->\n");
+    curr = head->next;
+    int j = 1;
+    while (curr != NULL)
+    {
+        int val = 0;
+        subNode *currChain = curr->sideChain;
+        while (currChain != NULL)
+        {
+            val += currChain->size;
+            currChain = currChain->next;
+        }
+
+        printf("Node %d have unused space of %d bytes\n", j++, curr->pages * PAGE_SIZE - val);
+        curr = curr->next;
+    }
 }
 
 /*
@@ -234,25 +271,18 @@ Returns: MeMS physical address mapped to the passed ptr (MeMS virtual address).
 */
 void *mems_get(void *v_ptr)
 {
-    printf("chut %d\n", v_ptr);
-    void *trace_vaddr = 0;
-    Node *curr = head;
-    int i = 0;
+    Node *curr = head->next;
+    int trace_addr = 0;
     while (curr != NULL)
     {
-        subNode *currChain = curr->sideChain;
-        while (currChain != NULL)
+        int count = 0;
+        subNode *chain = curr->sideChain;
+        while (chain != NULL)
         {
-            if (trace_vaddr >= v_ptr)
-            {
-                printf("%d\n", trace_vaddr);
-                return currChain;
-            }
-            trace_vaddr += currChain->size;
-            currChain = currChain->next;
+            trace_addr += chain->size;
+            chain = chain->next;
         }
         curr = curr->next;
-        printf("%d\n", i++);
     }
     printf("Invalid v_ptr\n");
     return (void *)(-1);
