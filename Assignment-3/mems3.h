@@ -187,7 +187,6 @@ void *mems_malloc(size_t size)
 
     if (!check)
     {
-        pages++;
         printf("making new node\n");
         curr = head;
         while (curr->next)
@@ -201,6 +200,7 @@ void *mems_malloc(size_t size)
         curr->next = new_node;
         subNode *newNode = (subNode *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
         new_node->pages = size / PAGE_SIZE + (size % PAGE_SIZE == 0 ? 0 : 1);
+        pages += new_node->pages;
         if (newNode == MAP_FAILED)
         {
             perror("Error in mmap for newNode");
