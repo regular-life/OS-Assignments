@@ -17,6 +17,7 @@ int main(int argc, char const *argv[])
         printf("Virtual address: %lu\n", (unsigned long)ptr[i]);
         printList();
     }
+    mems_print_stats();
     /*
     In this section we are tring to write value to 1st index of array[0] (here it is 0 based indexing).
     We get get value of both the 0th index and 1st index of array[0] by using function mems_get.

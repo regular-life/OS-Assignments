@@ -30,8 +30,7 @@ typedef struct Node
 } Node;
 
 static Node *head;
-static int pages = 1;
-static void *v_addr = 0;
+static int pages = 0;
 /*
 Use this macro where ever you need PAGE_SIZE.
 As PAGESIZE can differ system to system we should have flexibility to modify this
@@ -39,6 +38,23 @@ macro to make the output of all system same and conduct a fair evaluation.
 */
 #define PAGE_SIZE 4096
 
+// Helping function to print whole DS
+void printList()
+{
+    Node *curr = head;
+    int i = 0;
+    while (curr != NULL)
+    {
+        printf("Node: %d\n", i++);
+        subNode *currChain = curr->sideChain;
+        while (currChain != NULL)
+        {
+            printf("Chain: %d\n", currChain);
+            currChain = currChain->next;
+        }
+        curr = curr->next;
+    }
+}
 /*
 Initializes all the required parameters for the MeMS system. The main parameters to be initialized are:
 1. the head of the free list i.e. the pointer that points to the head of the free list
@@ -129,20 +145,25 @@ void *mems_malloc(size_t size)
         temp = temp->next;
     }
 
+    void *v_addr = 0;
     Node *curr = head;
     bool check = false;
     while (curr != NULL)
     {
+        void *v_addr_temp = 0;
         subNode *currentchain = curr->sideChain;
         int space_used = 0;
         while (currentchain != NULL)
         {
             space_used += currentchain->size;
+            v_addr += currentchain->size;
+            v_addr_temp += currentchain->size;
             currentchain = currentchain->next;
         }
+
         if (space_used + size <= PAGE_SIZE && curr != head)
         {
-            printf("alloacting in same node\n");
+            printf("allocating in same node\n");
             check = true;
             subNode *newNode = (subNode *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
             if (newNode == MAP_FAILED)
@@ -153,18 +174,23 @@ void *mems_malloc(size_t size)
             newNode->size = size;
             newNode->type = PROCESS;
             newNode->next = NULL;
-            v_addr += size;
             subNode *curr_side = curr->sideChain;
             while (curr_side->next != NULL)
                 curr_side = curr_side->next;
             curr_side->next = newNode;
+            v_addr += size;
             return v_addr;
+        }
+        else if (curr != head)
+        {
+            v_addr += ((void *)PAGE_SIZE - v_addr_temp);
         }
         curr = curr->next;
     }
 
     if (!check)
     {
+        pages++;
         printf("making new node\n");
         curr = head;
         while (curr->next)
@@ -188,23 +214,6 @@ void *mems_malloc(size_t size)
         new_node->sideChain = newNode;
         new_node->next = NULL;
         return v_addr;
-    }
-}
-
-void printList()
-{
-    Node *curr = head;
-    int i = 0;
-    while (curr != NULL)
-    {
-        printf("Node: %d\n", i++);
-        subNode *currChain = curr->sideChain;
-        while (currChain != NULL)
-        {
-            printf("Chain: %d\n", currChain);
-            currChain = currChain->next;
-        }
-        curr = curr->next;
     }
 }
 /*
@@ -234,18 +243,16 @@ void *mems_get(void *v_ptr)
     while (curr != NULL)
     {
         subNode *currChain = curr->sideChain;
-        void *x = 0;
         while (currChain != NULL)
         {
             if (trace_vaddr >= v_ptr)
             {
+                printf("%d\n", trace_vaddr);
                 return currChain;
             }
             trace_vaddr += currChain->size;
             currChain = currChain->next;
-            x += currChain->size;
         }
-        trace_vaddr += (void *)PAGE_SIZE - x;
         curr = curr->next;
         printf("%d\n", i++);
     }
