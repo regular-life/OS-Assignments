@@ -13,7 +13,6 @@ REFER DOCUMENTATION FOR MORE DETAILS ON FUNSTIONS AND THEIR FUNCTIONALITY
 #include <stdlib.h>
 #include <sys/mman.h>
 #include <stdbool.h>
-
 #define HOLE 0
 #define PROCESS 1
 
@@ -38,7 +37,7 @@ Use this macro where ever you need PAGE_SIZE.
 As PAGESIZE can differ system to system we should have flexibility to modify this
 macro to make the output of all system same and conduct a fair evaluation.
 */
-#define(curr->pages *PAGE_SIZE 4096
+#define PAGE_SIZE 4096
 
 // Helping function to print whole DS
 void printList()
@@ -87,8 +86,8 @@ Returns: Nothing
 */
 void mems_finish()
 {
-    munmap(head, sizeof(Node));
-    munmap(head->sideChain, (curr->pages*PAGE_SIZE);
+    // munmap(head, sizeof(Node));
+    // munmap(head->sideChain, (curr->pages * PAGE_SIZE));
 }
 
 /*
@@ -181,7 +180,7 @@ void *mems_malloc(size_t size)
         }
         else if (curr != head)
         {
-            v_addr += ((void *)PAGE_SIZE * (curr->pages) - v_addr_temp);
+            v_addr += ((void *)(PAGE_SIZE * (curr->pages)) - v_addr_temp);
         }
         curr = curr->next;
     }
@@ -194,7 +193,6 @@ void *mems_malloc(size_t size)
         while (curr->next)
             curr = curr->next;
         Node *new_node = (Node *)mmap(NULL, sizeof(Node), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
-        new_node->pages = size/PAGE_SIZE + (size%PAGE_SIZE == 0 ? 0 : 1);
         if (new_node == MAP_FAILED)
         {
             perror("Error in mmap for newNode");
@@ -202,6 +200,7 @@ void *mems_malloc(size_t size)
         }
         curr->next = new_node;
         subNode *newNode = (subNode *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+        new_node->pages = size / PAGE_SIZE + (size % PAGE_SIZE == 0 ? 0 : 1);
         if (newNode == MAP_FAILED)
         {
             perror("Error in mmap for newNode");
