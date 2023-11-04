@@ -13,6 +13,7 @@ REFER DOCUMENTATION FOR MORE DETAILS ON FUNSTIONS AND THEIR FUNCTIONALITY
 #include <stdlib.h>
 #include <sys/mman.h>
 #include <stdbool.h>
+
 #define HOLE 0
 #define PROCESS 1
 
@@ -193,6 +194,7 @@ void *mems_malloc(size_t size)
         while (curr->next)
             curr = curr->next;
         Node *new_node = (Node *)mmap(NULL, sizeof(Node), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+        new_node->pages = size/PAGE_SIZE + (size%PAGE_SIZE == 0 ? 0 : 1);
         if (new_node == MAP_FAILED)
         {
             perror("Error in mmap for newNode");
