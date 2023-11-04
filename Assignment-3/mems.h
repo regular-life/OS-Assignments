@@ -12,31 +12,15 @@ REFER DOCUMENTATION FOR MORE DETAILS ON FUNSTIONS AND THEIR FUNCTIONALITY
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/mman.h>
-#define HOLE 0
-#define PROCESS 1
 
-typedef struct subNode
-{
-    int size;
-    int type;
-    struct subNode *next;
-} subNode;
-
-typedef struct Node
-{
-    struct Node *next;
-    subNode *sideChain;
-} Node;
-
-static Node *head;
-static int pages = 1;
-static void *v_addr = 0;
 /*
 Use this macro where ever you need PAGE_SIZE.
 As PAGESIZE can differ system to system we should have flexibility to modify this
 macro to make the output of all system same and conduct a fair evaluation.
 */
 #define PAGE_SIZE 4096
+#define HOLE 0
+#define PROCESS 1
 
 /*
 Initializes all the required parameters for the MeMS system. The main parameters to be initialized are:
@@ -46,17 +30,28 @@ Initializes all the required parameters for the MeMS system. The main parameters
 Input Parameter: Nothing
 Returns: Nothing
 */
+typedef struct Node
+{
+	int type;
+	void *start;
+	void *end;
+	struct Node *next;
+	struct Node *prev;
+	size_t size;
+} Node;
+
+typedef struct Chain
+{
+	struct Node *subChain;
+	struct Chain *next;
+	struct Chain *prev;
+} Chain;
+
+static Chain *head;
+static void * v_addr = 0;
 void mems_init()
 {
-    head = (Node *)mmap(NULL, sizeof(Node), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
-    // head = (Node *)malloc(sizeof(Node));
-    if (head == MAP_FAILED)
-    {
-        perror("Error in mmap for head");
-        exit(EXIT_FAILURE);
-    }
-    head->sideChain = NULL;
-    head->next = NULL;
+	head = (Chain *)mmap(NULL, sizeof(Chain), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
 }
 
 /*
@@ -67,8 +62,6 @@ Returns: Nothing
 */
 void mems_finish()
 {
-    munmap(head, sizeof(Node));
-    munmap(head->sideChain, PAGE_SIZE);
 }
 
 /*
@@ -85,66 +78,8 @@ Returns: MeMS Virtual address (that is created by MeMS)
 */
 void *mems_malloc(size_t size)
 {
-    Node *curr = head;
-    while (curr != NULL)
-    {
-        if (curr->sideChain == NULL)
-        {
-            subNode *newChain = (subNode *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
-            v_addr += size;
-            if (newChain == MAP_FAILED)
-            {
-                perror("Error in map for creating head\n");
-                exit(EXIT_FAILURE);
-            }
-            head->sideChain = newChain;
-            head->sideChain->size = size;
-            head->sideChain->type = PROCESS;
-            head->sideChain->next = NULL;
-            return v_addr;
-        }
-        else
-        {
-            subNode *currChain = curr->sideChain;
-            int val = 0;
-            while (currChain->next!= NULL)
-            {
-                val += currChain->size;
-                currChain = currChain->next;
-            }
-            val+=currChain->size;
-            if (val + size <= PAGE_SIZE)
-            {
-                subNode *nextSub = (subNode *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
-                v_addr += size;
-                if (nextSub == MAP_FAILED)
-                {
-                    perror("Error in map for creating new sideChain node\n");
-                    exit(EXIT_FAILURE);
-                }
-                currChain->next = nextSub;
-                currChain->next->size = size;
-                currChain->next->type = PROCESS;
-                currChain->next->next = NULL;
-                return v_addr;
-            }
-            else
-            {
-                Node *nextNode = (Node *)mmap(NULL, sizeof(Node), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
-                v_addr += 96;
-                if (nextNode == MAP_FAILED)
-                {
-                    perror("Error in map for creating new page\n");
-                    exit(EXIT_FAILURE);
-                }
-                pages++;
-                curr->next = nextNode;
-                curr->next->next = NULL;
-                curr->next->sideChain = NULL;
-            }
-        }
-        curr = curr->next;
-    }
+	head->subChain = (Node *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);	
+
 }
 
 /*
@@ -157,7 +92,6 @@ Returns: Nothing but should print the necessary information on STDOUT
 */
 void mems_print_stats()
 {
-    printf("Number of pages used : %d\n", pages);
 }
 
 /*
@@ -167,26 +101,6 @@ Returns: MeMS physical address mapped to the passed ptr (MeMS virtual address).
 */
 void *mems_get(void *v_ptr)
 {
-    printf("chut %d\n", v_ptr);
-    void *trace_vaddr = 0;
-    Node *curr = head;
-    while (curr != NULL)
-    {
-        subNode *currChain = curr->sideChain;
-        while (currChain != NULL)
-        {
-            if (trace_vaddr >= v_ptr)
-            {
-                return currChain;
-            }
-            trace_vaddr += currChain->size;
-            currChain = currChain->next;
-        }
-        trace_vaddr+=96;
-        curr = curr->next;
-    }
-    printf("Invalid v_ptr\n");
-    return (void *)(-1);
 }
 
 /*
