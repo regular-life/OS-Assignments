@@ -128,7 +128,7 @@ void *mems_malloc(size_t size)
                 currChain->next->next = NULL;
                 return v_addr;
             }
-            else if(curr->next==NULL)
+            else if (curr->next == NULL)
             {
                 Node *nextNode = (Node *)mmap(NULL, sizeof(Node), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
                 v_addr += PAGE_SIZE - val;
