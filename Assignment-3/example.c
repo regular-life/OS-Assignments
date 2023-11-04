@@ -1,5 +1,5 @@
 // include other header files as needed
-#include "mems3.h"
+#include "mems2.h"
 
 int main(int argc, char const *argv[])
 {
