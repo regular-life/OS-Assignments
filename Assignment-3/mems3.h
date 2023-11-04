@@ -86,6 +86,49 @@ Returns: MeMS Virtual address (that is created by MeMS)
 */
 void *mems_malloc(size_t size)
 {
+    void *vaddress = 0;
+    if (size > PAGE_SIZE)
+    {
+        printf("Size too large\n");
+        return (void *)(-1);
+    }
+    Node *temp = head;
+    while (temp != NULL)
+    {
+        subNode *curr = temp->sideChain;
+        subNode *prev = NULL;
+        while (curr != NULL)
+        {
+            vaddress += curr->size;
+            if (curr->type == HOLE && curr->size >= size)
+            {
+                subNode *semiNode = (subNode *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+                if (semiNode == MAP_FAILED)
+                {
+                    perror("Error in mmap for semiNode");
+                    exit(EXIT_FAILURE);
+                }
+                semiNode->size = size;
+                semiNode->type = PROCESS;
+                semiNode->next = curr;
+                vaddress -= size;
+                curr->size -= size;
+                if (prev == NULL)
+                {
+                    temp->sideChain = semiNode;
+                }
+                else
+                {
+                    prev->next = semiNode;
+                }
+                return vaddress;
+            }
+            prev = curr;
+            curr = curr->next;
+        }
+        temp = temp->next;
+    }
+
     Node *curr = head;
     bool check = false;
     while (curr != NULL)
@@ -97,7 +140,7 @@ void *mems_malloc(size_t size)
             space_used += currentchain->size;
             currentchain = currentchain->next;
         }
-        if (space_used + size <= PAGE_SIZE && curr!=head)
+        if (space_used + size <= PAGE_SIZE && curr != head)
         {
             printf("alloacting in same node\n");
             check = true;
@@ -109,16 +152,15 @@ void *mems_malloc(size_t size)
             }
             newNode->size = size;
             newNode->type = PROCESS;
-            newNode->next=NULL;
+            newNode->next = NULL;
             v_addr += size;
-            subNode*curr_side=curr->sideChain;
-            while(curr_side->next!=NULL)
-                curr_side=curr_side->next;
-            curr_side->next=newNode;
+            subNode *curr_side = curr->sideChain;
+            while (curr_side->next != NULL)
+                curr_side = curr_side->next;
+            curr_side->next = newNode;
             return v_addr;
         }
-        curr=curr->next;
-        
+        curr = curr->next;
     }
 
     if (!check)
@@ -133,7 +175,7 @@ void *mems_malloc(size_t size)
             perror("Error in mmap for newNode");
             exit(EXIT_FAILURE);
         }
-        curr->next=new_node;
+        curr->next = new_node;
         subNode *newNode = (subNode *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
         if (newNode == MAP_FAILED)
         {
@@ -143,11 +185,10 @@ void *mems_malloc(size_t size)
         newNode->size = size;
         newNode->type = PROCESS;
         v_addr += size;
-        new_node->sideChain=newNode;
-        new_node->next=NULL;
+        new_node->sideChain = newNode;
+        new_node->next = NULL;
         return v_addr;
     }
-    
 }
 
 void printList()
