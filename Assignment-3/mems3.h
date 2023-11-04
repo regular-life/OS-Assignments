@@ -13,7 +13,6 @@ REFER DOCUMENTATION FOR MORE DETAILS ON FUNSTIONS AND THEIR FUNCTIONALITY
 #include <stdlib.h>
 #include <sys/mman.h>
 #include <stdbool.h>
-
 #define HOLE 0
 #define PROCESS 1
 
@@ -28,7 +27,7 @@ typedef struct Node
 {
     struct Node *next;
     subNode *sideChain;
-    int pages ;
+    int pages;
 } Node;
 
 static Node *head;
@@ -38,7 +37,7 @@ Use this macro where ever you need PAGE_SIZE.
 As PAGESIZE can differ system to system we should have flexibility to modify this
 macro to make the output of all system same and conduct a fair evaluation.
 */
-#define PAGE_SIZE 4096
+#define(curr->pages *PAGE_SIZE 4096
 
 // Helping function to print whole DS
 void printList()
@@ -68,6 +67,7 @@ Returns: Nothing
 void mems_init()
 {
     head = (Node *)mmap(NULL, sizeof(Node), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+    head->pages = 0;
     // head = (Node *)malloc(sizeof(Node));
     if (head == MAP_FAILED)
     {
@@ -76,7 +76,6 @@ void mems_init()
     }
     head->sideChain = NULL;
     head->next = NULL;
-    head->pages = 0;
 }
 
 /*
@@ -88,7 +87,7 @@ Returns: Nothing
 void mems_finish()
 {
     munmap(head, sizeof(Node));
-    munmap(head->sideChain, PAGE_SIZE);
+    munmap(head->sideChain, (curr->pages*PAGE_SIZE);
 }
 
 /*
@@ -106,11 +105,6 @@ Returns: MeMS Virtual address (that is created by MeMS)
 void *mems_malloc(size_t size)
 {
     void *vaddress = 0;
-    if (size > PAGE_SIZE)
-    {
-        printf("Size too large\n");
-        return (void *)(-1);
-    }
     Node *temp = head;
     while (temp != NULL)
     {
@@ -164,7 +158,7 @@ void *mems_malloc(size_t size)
             currentchain = currentchain->next;
         }
 
-        if (space_used + size <= curr->pages*PAGE_SIZE && curr != head)
+        if (space_used + size <= curr->pages * PAGE_SIZE && curr != head)
         {
             printf("allocating in same node\n");
             check = true;
@@ -186,7 +180,7 @@ void *mems_malloc(size_t size)
         }
         else if (curr != head)
         {
-            v_addr += ((void *)(curr->pages*PAGE_SIZE) - v_addr_temp);
+            v_addr += ((void *)PAGE_SIZE * (curr->pages) - v_addr_temp);
         }
         curr = curr->next;
     }
@@ -199,7 +193,6 @@ void *mems_malloc(size_t size)
         while (curr->next)
             curr = curr->next;
         Node *new_node = (Node *)mmap(NULL, sizeof(Node), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
-        new_node->pages = size/PAGE_SIZE + (size%PAGE_SIZE == 0 ? 0 : 1);
         if (new_node == MAP_FAILED)
         {
             perror("Error in mmap for newNode");
