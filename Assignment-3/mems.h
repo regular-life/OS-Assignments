@@ -202,7 +202,7 @@ void *mems_malloc(size_t size)
         curr = head;
         while (curr->next)
             curr = curr->next;
-        Node *new_node = (Node *)mmap(NULL, sizeof(Node), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+        Node *new_node = (Node *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
         if (new_node == MAP_FAILED)
         {
             perror("Error in mmap for newNode");
@@ -210,6 +210,7 @@ void *mems_malloc(size_t size)
         }
         curr->next = new_node;
         subNode *newNode = (subNode *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+        printf("bbb %lu\n", new_node);
         new_node->pages = size / PAGE_SIZE + (size % PAGE_SIZE == 0 ? 0 : 1);
         pages += new_node->pages;
         if (newNode == MAP_FAILED)
@@ -283,7 +284,7 @@ Returns: MeMS physical address mapped to the passed ptr (MeMS virtual address).
 void *mems_get(void *v_ptr)
 {
     Node *curr = head->next;
-    int trace_addr = 0;
+    void *trace_addr = 0;
     while (curr != NULL)
     {
         int count = 0;
@@ -293,8 +294,9 @@ void *mems_get(void *v_ptr)
             trace_addr += chain->size;
             if (trace_addr >= v_ptr)
             {
-                return (void *)chain;
+                return (void *)chain + count;
             }
+            count += chain->size;
             chain = chain->next;
         }
         curr = curr->next;
