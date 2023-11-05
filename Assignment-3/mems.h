@@ -85,8 +85,20 @@ Returns: Nothing
 */
 void mems_finish()
 {
-    // munmap(head, sizeof(Node));
-    // munmap(head->sideChain, (curr->pages * PAGE_SIZE));
+    Node *curr = head;
+    while (curr != NULL)
+    {
+        subNode *currChain = curr->sideChain;
+        while (currChain != NULL)
+        {
+            subNode *temp = currChain;
+            currChain = currChain->next;
+            munmap(temp, temp->size);
+        }
+        Node *temp = curr;
+        curr = curr->next;
+        munmap(temp, sizeof(Node));
+    }
 }
 
 /*
@@ -233,7 +245,6 @@ void mems_print_stats()
         subNode *currChain = curr->sideChain;
         while (currChain != NULL)
         {
-            // printf("Chain: %d\n", currChain);
             if (currChain->type == PROCESS)
             {
                 printf("Process of size : %d\n", currChain->size);
@@ -277,15 +288,13 @@ void *mems_get(void *v_ptr)
     {
         int count = 0;
         subNode *chain = curr->sideChain;
-        subNode *prev = NULL;
         while (chain != NULL)
         {
             trace_addr += chain->size;
             if (trace_addr >= v_ptr)
             {
-                return chain;
+                return (void *)chain;
             }
-            prev = chain;
             chain = chain->next;
         }
         curr = curr->next;
