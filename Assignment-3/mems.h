@@ -281,29 +281,38 @@ Returns the MeMS physical address mapped to ptr ( ptr is MeMS virtual address).
 Parameter: MeMS Virtual address (that is created by MeMS)
 Returns: MeMS physical address mapped to the passed ptr (MeMS virtual address).
 */
-// void *mems_get(void *v_ptr)
-// {
-//     Node *curr = head->next;
-//     void *trace_addr = 0;
-//     while (curr != NULL)
-//     {
-//         int count = 0;
-//         subNode *chain = curr->sideChain;
-//         while (chain != NULL)
-//         {
-//             trace_addr += chain->size;
-//             if (trace_addr >= v_ptr)
-//             {
-//                 return (void *)chain + count;
-//             }
-//             count += chain->size;
-//             chain = chain->next;
-//         }
-//         curr = curr->next;
-//     }
-//     printf("Invalid v_ptr\n");
-//     return (void *)(-1);
-// }
+void *mems_get_sanyam(void *v_ptr)
+{
+    Node *curr = head->next;
+    void *trace_addr = 0;
+    while (curr != NULL)
+    {
+        int count = 0;
+        subNode *chain = curr->sideChain;
+        while (chain != NULL)
+        {
+            trace_addr += chain->size;
+            count += chain->size;
+            if (trace_addr >= v_ptr)
+            {
+                printf("%lu\n",trace_addr);
+                return (void *)curr+1; //doubt
+            }
+            count += chain->size;
+            chain = chain->next;
+        }
+        trace_addr += ((curr->pages) * PAGE_SIZE )- count;
+        if (trace_addr >= v_ptr)
+        {
+            printf("This is Virtual address of unused space\n");
+            return (void *)-1;
+        }
+        curr = curr->next;
+    }
+    printf("Invalid v_ptr\n");
+    return (void *)(-1);
+}
+
 
 void *mems_get(void *v_ptr)
 {
