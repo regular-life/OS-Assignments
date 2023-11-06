@@ -18,8 +18,9 @@ REFER DOCUMENTATION FOR MORE DETAILS ON FUNSTIONS AND THEIR FUNCTIONALITY
 
 typedef struct subNode
 {
-    int type;
     int size;
+    int val;
+    int type;
     struct subNode *next;
 } subNode;
 
@@ -348,10 +349,10 @@ void mems_free(void *v_ptr)
     {
         void *temp_add = 0;
         subNode *curr_chain = curr->sideChain;
-        trace_addr += curr_chain->size;
-        temp_add += curr_chain->size;
         while (curr_chain != NULL)
         {
+            trace_addr += curr_chain->size;
+            temp_add += curr_chain->size;
             if (trace_addr == v_ptr)
             {
                 curr_chain->type = HOLE;
