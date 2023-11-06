@@ -18,8 +18,8 @@ REFER DOCUMENTATION FOR MORE DETAILS ON FUNSTIONS AND THEIR FUNCTIONALITY
 
 typedef struct subNode
 {
-    int size;
     int type;
+    int size;
     struct subNode *next;
 } subNode;
 
@@ -38,6 +38,49 @@ As PAGESIZE can differ system to system we should have flexibility to modify thi
 macro to make the output of all system same and conduct a fair evaluation.
 */
 #define PAGE_SIZE 4096
+#define MAX_ENTRIES 1000
+
+// Define a struct to represent a key-value pair with void* pointers
+struct KeyValuePair
+{
+    void *key;
+    void *value;
+};
+
+// Define the dictionary as an array of key-value pairs
+struct KeyValuePair dictionary[MAX_ENTRIES];
+int dictionarySize = 0; // Tracks the current size of the dictionary
+
+// Function to add a key-value pair to the dictionary
+int addToDictionary(void *key, void *value)
+{
+    if (dictionarySize < MAX_ENTRIES)
+    {
+        dictionary[dictionarySize].key = key;
+        dictionary[dictionarySize].value = value;
+        dictionarySize++;
+        printf("Added key: %p, value: %p to the dictionary.\n", key, value);
+        return 1; // Success
+    }
+    else
+    {
+        printf("Dictionary is full. Cannot add more items.\n");
+        return 0; // Failure
+    }
+}
+
+// Function to retrieve a value from the dictionary based on a key
+void *getFromDictionary(void *key)
+{
+    for (int i = 0; i < dictionarySize - 1; i++)
+    {
+        if (dictionary[i + 1].key > key)
+        {
+            return dictionary[i].value + (key - dictionary[i].key);
+        }
+    }
+    return NULL;
+}
 
 // Helping function to print whole DS
 void printList()
@@ -145,6 +188,7 @@ void *mems_malloc(size_t size)
                 {
                     prev->next = semiNode;
                 }
+                addToDictionary(vaddress, (void *)semiNode);
                 return vaddress;
             }
             prev = curr;
@@ -187,6 +231,7 @@ void *mems_malloc(size_t size)
                 curr_side = curr_side->next;
             curr_side->next = newNode;
             v_addr += size;
+            addToDictionary(v_addr, (void *)newNode);
             return v_addr;
         }
         else if (curr != head)
@@ -210,7 +255,6 @@ void *mems_malloc(size_t size)
         }
         curr->next = new_node;
         subNode *newNode = (subNode *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
-        printf("bbb %lu\n", new_node);
         new_node->pages = size / PAGE_SIZE + (size % PAGE_SIZE == 0 ? 0 : 1);
         pages += new_node->pages;
         if (newNode == MAP_FAILED)
@@ -223,6 +267,7 @@ void *mems_malloc(size_t size)
         v_addr += size;
         new_node->sideChain = newNode;
         new_node->next = NULL;
+        addToDictionary(v_addr, (void *)newNode);
         return v_addr;
     }
 }
@@ -237,12 +282,12 @@ Returns: Nothing but should print the necessary information on STDOUT
 void mems_print_stats()
 {
     printf("Number of pages used : %d\n", pages);
-    printf("Details -> \n", 0);
+    printf("Details -> \n");
     Node *curr = head->next;
     int i = 1;
     while (curr != NULL)
     {
-        printf("Node: %d Pages : %d\n", i++, curr->pages);
+        printf("Node: %d contains %d Pages\n", i++, curr->pages);
         subNode *currChain = curr->sideChain;
         while (currChain != NULL)
         {
@@ -250,9 +295,13 @@ void mems_print_stats()
             {
                 printf("Process of size : %d\n", currChain->size);
             }
-            else
+            else if (currChain->type == HOLE)
             {
                 printf("Hole of size : %d\n", currChain->size);
+            }
+            else
+            {
+                printf("bc %d %d\n", currChain->size, currChain->type);
             }
             currChain = currChain->next;
         }
@@ -281,70 +330,9 @@ Returns the MeMS physical address mapped to ptr ( ptr is MeMS virtual address).
 Parameter: MeMS Virtual address (that is created by MeMS)
 Returns: MeMS physical address mapped to the passed ptr (MeMS virtual address).
 */
-void *mems_get_sanyam(void *v_ptr)
-{
-    Node *curr = head->next;
-    void *trace_addr = 0;
-    while (curr != NULL)
-    {
-        int count = 0;
-        subNode *chain = curr->sideChain;
-        while (chain != NULL)
-        {
-            trace_addr += chain->size;
-            count += chain->size;
-            if (trace_addr >= v_ptr)
-            {
-                printf("%lu\n",trace_addr);
-                return (void *)curr+1; //doubt
-            }
-            count += chain->size;
-            chain = chain->next;
-        }
-        trace_addr += ((curr->pages) * PAGE_SIZE )- count;
-        if (trace_addr >= v_ptr)
-        {
-            printf("This is Virtual address of unused space\n");
-            return (void *)-1;
-        }
-        curr = curr->next;
-    }
-    printf("Invalid v_ptr\n");
-    return (void *)(-1);
-}
-
-
 void *mems_get(void *v_ptr)
 {
-   void *trace_addr = 0;
-    Node *curr = head->next;
-    while (curr)
-    {
-        if (curr->pages * PAGE_SIZE + trace_addr < v_ptr)
-        {
-            trace_addr += curr->pages * PAGE_SIZE;
-            curr = curr->next;
-        }
-        else
-        {
-            subNode *currChain = curr->sideChain;
-            while (currChain)
-            {
-                trace_addr += currChain->size;
-                if (trace_addr > v_ptr)
-                {
-                    return (void *)currChain;
-                }
-                else if (trace_addr == v_ptr)
-                {
-                    return (void *)currChain->next;
-                }
-                currChain = currChain->next;
-            }
-        }
-    }
-    printf("Error in mems_get\n");
-    return void *(-1);
+    return getFromDictionary(v_ptr);
 }
 
 /*
@@ -354,4 +342,24 @@ Returns: nothing
 */
 void mems_free(void *v_ptr)
 {
+    void *trace_addr = 0;
+    Node *curr = head->next;
+    while (curr)
+    {
+        void *temp_add = 0;
+        subNode *curr_chain = curr->sideChain;
+        trace_addr += curr_chain->size;
+        temp_add += curr_chain->size;
+        while (curr_chain != NULL)
+        {
+            if (trace_addr == v_ptr)
+            {
+                curr_chain->type = HOLE;
+                return;
+            }
+            curr_chain = curr_chain->next;
+        }
+        trace_addr += ((void *)(PAGE_SIZE * (curr->pages)) - temp_add);
+        curr = curr->next;
+    }
 }
