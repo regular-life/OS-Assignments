@@ -12,8 +12,10 @@ REFER DOCUMENTATION FOR MORE DETAILS ON FUNSTIONS AND THEIR FUNCTIONALITY
 #include <stdlib.h>
 #include <sys/mman.h>
 #include <stdbool.h>
+
 #define HOLE 0
 #define PROCESS 1
+#define START (void *)1000
 
 typedef struct subNode
 {
@@ -21,11 +23,13 @@ typedef struct subNode
     int val;
     int type;
     struct subNode *next;
+    struct subNode *prev;
 } subNode;
 
 typedef struct Node
 {
     struct Node *next;
+    struct Node *prev;
     subNode *sideChain;
     int pages;
 } Node;
@@ -103,13 +107,11 @@ void removeFromDictionary(void *virtual_address)
         if (dictionary[i].virtual_address == virtual_address)
         {
             found = 1;
-            // Shift elements to cover the gap left by the removed item
-            for (int j = i; j < dictionarySize - 1; j++)
+             for (int j = i; j < dictionarySize - 1; j++)
             {
                 dictionary[j] = dictionary[j + 1];
             }
             dictionarySize--;
-            printf("Removed virtual_address: %p from the dictionary.\n", virtual_address);
             break;
         }
     }
@@ -163,6 +165,53 @@ void mems_finish()
     }
 }
 
+void *HOLE_alloc(size_t size)
+{
+    void *vaddress = START;
+    Node *temp = head;
+    while (temp != NULL)
+    {
+        subNode *curr = temp->sideChain;
+        subNode *prev = NULL;
+        while (curr != NULL)
+        {
+            if (curr->type == HOLE && curr->size > size)
+            {
+                subNode *semiNode = (subNode *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+                if (semiNode == MAP_FAILED)
+                {
+                    perror("Error in mmap for semiNode");
+                    exit(EXIT_FAILURE);
+                }
+                semiNode->size = size;
+                semiNode->type = PROCESS;
+                semiNode->next = curr;
+                curr->prev = semiNode ;
+                curr->size -= size;
+                if (prev == NULL)
+                {
+                    temp->sideChain = semiNode;
+                }
+                else
+                {
+                    prev->next = semiNode;
+                    semiNode->prev= prev ;
+                }
+                InsertDict(vaddress, (void *)semiNode);
+                return vaddress;
+            }
+            else if (curr->type == HOLE && curr->size == size)
+            {
+                curr->type = PROCESS;
+                return vaddress;
+            }
+            vaddress += curr->size;
+            prev = curr;
+            curr = curr->next;
+        }
+        temp = temp->next;
+    }
+}
 /*
 Allocates memory of the specified size by reusing a segment from the free list if
 a sufficiently large segment is available.
@@ -177,97 +226,14 @@ Returns: MeMS Virtual address (that is created by MeMS)
 */
 void *mems_malloc(size_t size)
 {
-    void *vaddress = 0;
-    Node *temp = head;
-    while (temp != NULL)
+    void *add = HOLE_alloc(size);
+    if (add != 0)
     {
-        subNode *curr = temp->sideChain;
-        subNode *prev = NULL;
-        while (curr != NULL)
-        {
-            vaddress += curr->size;
-            if (curr->type == HOLE && curr->size > size)
-            {
-                subNode *semiNode = (subNode *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
-                if (semiNode == MAP_FAILED)
-                {
-                    perror("Error in mmap for semiNode");
-                    exit(EXIT_FAILURE);
-                }
-                semiNode->size = size;
-                semiNode->type = PROCESS;
-                semiNode->next = curr;
-                vaddress -= size;
-                curr->size -= size;
-                if (prev == NULL)
-                {
-                    temp->sideChain = semiNode;
-                }
-                else
-                {
-                    prev->next = semiNode;
-                }
-                InsertDict(vaddress, (void *)semiNode);
-                return vaddress;
-            }
-
-            else if (curr->type == HOLE && curr->size == size)
-            {
-                curr->type = PROCESS;
-                return vaddress;
-            }
-            prev = curr;
-            curr = curr->next;
-        }
-        temp = temp->next;
+        return add;
     }
-
-    void *v_addr = 0;
-    Node *curr = head;
-    bool check = false;
-    while (curr != NULL)
+    else
     {
-        void *v_addr_temp = 0;
-        subNode *currentchain = curr->sideChain;
-        int space_used = 0;
-        while (currentchain != NULL)
-        {
-            space_used += currentchain->size;
-            v_addr += currentchain->size;
-            v_addr_temp += currentchain->size;
-            currentchain = currentchain->next;
-        }
-
-        if (space_used + size <= curr->pages * PAGE_SIZE && curr != head)
-        {
-            check = true;
-            subNode *newNode = (subNode *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
-            if (newNode == MAP_FAILED)
-            {
-                perror("Error in mmap for newNode");
-                exit(EXIT_FAILURE);
-            }
-            newNode->size = size;
-            newNode->type = PROCESS;
-            newNode->next = NULL;
-            subNode *curr_side = curr->sideChain;
-            while (curr_side->next != NULL)
-                curr_side = curr_side->next;
-            curr_side->next = newNode;
-            v_addr += size;
-            InsertDict(v_addr, (void *)newNode);
-            return v_addr;
-        }
-        else if (curr != head)
-        {
-            v_addr += ((void *)(PAGE_SIZE * (curr->pages)) - v_addr_temp);
-        }
-        curr = curr->next;
-    }
-
-    if (!check)
-    {
-        curr = head;
+        Node *curr = head;
         while (curr->next)
             curr = curr->next;
         Node *new_node = (Node *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
@@ -277,6 +243,7 @@ void *mems_malloc(size_t size)
             exit(EXIT_FAILURE);
         }
         curr->next = new_node;
+        new_node->prev = (curr == head ? NULL : curr) ;
         subNode *newNode = (subNode *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
         new_node->pages = size / PAGE_SIZE + (size % PAGE_SIZE == 0 ? 0 : 1);
         pages += new_node->pages;
@@ -285,13 +252,10 @@ void *mems_malloc(size_t size)
             perror("Error in mmap for newNode");
             exit(EXIT_FAILURE);
         }
-        newNode->size = size;
-        newNode->type = PROCESS;
-        v_addr += size;
+        newNode->size = new_node->pages * PAGE_SIZE;
+        newNode->type = HOLE;
         new_node->sideChain = newNode;
-        new_node->next = NULL;
-        InsertDict(v_addr, (void *)newNode);
-        return v_addr;
+        HOLE_alloc(size);
     }
 }
 /*
@@ -304,44 +268,77 @@ Returns: Nothing but should print the necessary information on STDOUT
 */
 void mems_print_stats()
 {
-    printf("Number of pages used : %d\n", pages);
-    printf("Details -> \n");
+    // printf("Number of pages used : %d\n", pages);
+    // printf("Details -> \n");
+    printf("----- MeMS SYSTEM STATS -----\n");
     Node *curr = head->next;
     int i = 1;
+    void *initial = START;
+    int main_chain_length = 0;
     while (curr != NULL)
     {
-        printf("Node: %d contains %d Pages\n", i++, curr->pages);
+        printf("MAIN[%d:%d]-> ", initial, curr->pages * PAGE_SIZE + initial - 1);
+        // printf("Node: %d contains %d Pages\n", i++, curr->pages);
         subNode *currChain = curr->sideChain;
         while (currChain != NULL)
         {
             if (currChain->type == PROCESS)
             {
-                printf("Process of size : %d\n", currChain->size);
+                printf("P");
             }
             else if (currChain->type == HOLE)
             {
-                printf("Hole of size : %d\n", currChain->size);
+                printf("H");
+            }
+            printf("[%d:%d] <-> ", initial, initial + currChain->size - 1);
+            initial += currChain->size;
+            currChain = currChain->next;
+        }
+        printf("NULL\n");
+        curr = curr->next;
+        main_chain_length++;
+    }
+    printf("Pages used : %d\n", pages);
+    // printf("Unused space of each Node ->\n");
+    curr = head->next;
+    int j = 1;
+    int space_unused = 0;
+    while (curr != NULL)
+    {
+        subNode *currChain = curr->sideChain;
+        while (currChain != NULL)
+        {
+            if (currChain->type == HOLE)
+            {
+                space_unused += currChain->size;
             }
             currChain = currChain->next;
         }
         curr = curr->next;
     }
-    printf("Unused space of each Node ->\n");
+    printf("Space unused : %d\n", space_unused);
+    printf("Main chain length: %d\n", main_chain_length);
+    int sub_chain_length_array[main_chain_length];
     curr = head->next;
-    int j = 1;
-    while (curr != NULL)
+    i = 0;
+    while (curr)
     {
-        int val = 0;
         subNode *currChain = curr->sideChain;
+        int sub_chain_length = 0;
         while (currChain != NULL)
         {
-            val += currChain->size;
+            sub_chain_length++;
             currChain = currChain->next;
         }
-
-        printf("Node %d have unused space of %d bytes\n", j++, curr->pages * PAGE_SIZE - val);
+        sub_chain_length_array[i++] = sub_chain_length;
         curr = curr->next;
     }
+    printf("Sub chain length array: [");
+    for (int i = 0; i < main_chain_length; i++)
+    {
+        printf("%d, ", sub_chain_length_array[i]);
+    }
+    printf("]\n-----------------------------\n");
 }
 
 /*
@@ -361,21 +358,39 @@ Returns: nothing
 */
 void mems_free(void *v_ptr)
 {
-    void *trace_addr = 0;
+    void *trace_addr = START;
     Node *curr = head->next;
     while (curr)
     {
         void *temp_add = 0;
         subNode *curr_chain = curr->sideChain;
+        subNode *prev = NULL;
         while (curr_chain != NULL)
         {
-            trace_addr += curr_chain->size;
-            temp_add += curr_chain->size;
             if (trace_addr == v_ptr)
             {
                 curr_chain->type = HOLE;
+                // Merging two consecutive Holes
+                if (prev != NULL && prev->type == HOLE)
+                {
+                    prev->size += curr_chain->size;
+                    prev->next = curr_chain->next;
+                    munmap(curr_chain, curr_chain->size);
+                    curr_chain = prev;
+                }
+                if (curr_chain->next != NULL && curr_chain->next->type == HOLE)
+                {
+                    curr_chain->size += curr_chain->next->size;
+                    subNode *temp = curr_chain->next;
+                    curr_chain->next = curr_chain->next->next;
+                    munmap(temp, temp->size);
+                }
+
                 return;
             }
+            trace_addr += curr_chain->size;
+            temp_add += curr_chain->size;
+            prev = curr_chain;
             curr_chain = curr_chain->next;
         }
         trace_addr += ((void *)(PAGE_SIZE * (curr->pages)) - temp_add);
