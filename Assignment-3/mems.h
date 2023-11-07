@@ -15,7 +15,7 @@ REFER DOCUMENTATION FOR MORE DETAILS ON FUNSTIONS AND THEIR FUNCTIONALITY
 
 #define HOLE 0
 #define PROCESS 1
-#define START (void *)1000
+#define START (void *)1000 // start of virtual address
 
 typedef struct subNode
 {
@@ -58,8 +58,7 @@ int InsertDict(void *virtual_address, void *physical_address)
     if (dictionarySize < SIZE)
     {
         dictionary[dictionarySize].virtual_address = virtual_address;
-        dictionary[dictionarySize].physical_address = physical_address;
-        dictionarySize++;
+        dictionary[dictionarySize++].physical_address = physical_address;
         return 1; // Success
     }
     else
@@ -299,7 +298,6 @@ void mems_print_stats()
         main_chain_length++;
     }
     printf("Pages used : %d\n", pages);
-    // printf("Unused space of each Node ->\n");
     curr = head->next;
     int j = 1;
     int space_unused = 0;
@@ -336,7 +334,11 @@ void mems_print_stats()
     printf("Sub chain length array: [");
     for (int i = 0; i < main_chain_length; i++)
     {
-        printf("%d, ", sub_chain_length_array[i]);
+        printf("%d", sub_chain_length_array[i]);
+        if (i != main_chain_length - 1)
+        {
+            printf(", ");
+        }
     }
     printf("]\n-----------------------------\n");
 }
