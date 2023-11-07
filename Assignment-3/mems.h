@@ -42,19 +42,19 @@ macro to make the output of all system same and conduct a fair evaluation.
 
 struct KeyValuePair
 {
-    void *key;
-    void *value;
+    void *virtual_address;
+    void *physical_address;
 };
 
 struct KeyValuePair dictionary[SIZE];
 int dictionarySize = 0;
 
-int InsertDict(void *key, void *value)
+int InsertDict(void *virtual_address, void *physical_address)
 {
     if (dictionarySize < SIZE)
     {
-        dictionary[dictionarySize].key = key;
-        dictionary[dictionarySize].value = value;
+        dictionary[dictionarySize].virtual_address = virtual_address;
+        dictionary[dictionarySize].physical_address = physical_address;
         dictionarySize++;
         return 1; // Success
     }
@@ -65,13 +65,13 @@ int InsertDict(void *key, void *value)
     }
 }
 
-void *searchDict(void *key)
+void *searchDict(void *virtual_address)
 {
     for (int i = 0; i < dictionarySize - 1; i++)
     {
-        if (dictionary[i + 1].key > key)
+        if (dictionary[i + 1].virtual_address > virtual_address)
         {
-            return dictionary[i].value + (key - dictionary[i].key);
+            return dictionary[i].physical_address + (virtual_address - dictionary[i].virtual_address);
         }
     }
     return NULL;
@@ -95,12 +95,12 @@ void printList()
     }
 }
 
-void removeFromDictionary(void *key)
+void removeFromDictionary(void *virtual_address)
 {
     int found = 0;
     for (int i = 0; i < dictionarySize; i++)
     {
-        if (dictionary[i].key == key)
+        if (dictionary[i].virtual_address == virtual_address)
         {
             found = 1;
             // Shift elements to cover the gap left by the removed item
@@ -109,7 +109,7 @@ void removeFromDictionary(void *key)
                 dictionary[j] = dictionary[j + 1];
             }
             dictionarySize--;
-            printf("Removed key: %p from the dictionary.\n", key);
+            printf("Removed virtual_address: %p from the dictionary.\n", virtual_address);
             break;
         }
     }
@@ -186,7 +186,7 @@ void *mems_malloc(size_t size)
         while (curr != NULL)
         {
             vaddress += curr->size;
-            if (curr->type == HOLE && curr->size >= size)
+            if (curr->type == HOLE && curr->size > size)
             {
                 subNode *semiNode = (subNode *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
                 if (semiNode == MAP_FAILED)
@@ -208,6 +208,12 @@ void *mems_malloc(size_t size)
                     prev->next = semiNode;
                 }
                 InsertDict(vaddress, (void *)semiNode);
+                return vaddress;
+            }
+
+            else if (curr->type == HOLE && curr->size == size)
+            {
+                curr->type = PROCESS;
                 return vaddress;
             }
             prev = curr;
@@ -308,11 +314,11 @@ void mems_print_stats()
         subNode *currChain = curr->sideChain;
         while (currChain != NULL)
         {
-            if (currChain->type == PROCESS && currChain->size != 0)
+            if (currChain->type == PROCESS)
             {
                 printf("Process of size : %d\n", currChain->size);
             }
-            else if (currChain->type == HOLE && currChain->size != 0)
+            else if (currChain->type == HOLE)
             {
                 printf("Hole of size : %d\n", currChain->size);
             }
