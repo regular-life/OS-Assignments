@@ -49,6 +49,7 @@ MeMS offers an efficient memory management system that tracks memory allocation 
 ---
 
 ## Contributors
-- [Your Name] - [GitHub Profile](Link to your GitHub profile)
+- Yash Bhardwaj - [GitHub Profile](https://github.com/regular-life)
+- Sanyam Garg - [GitHub Profile](https://github.com/SanyamGarg12)
 
-For any queries or further information, please reach out to the contributors listed above.
+Feel free to reach to any of us at sanyam22448@iiitd.ac.in or yash22586@iiitd.ac.in for any questions or issues related to the above assignment.
