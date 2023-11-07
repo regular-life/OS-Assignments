@@ -1,7 +1,6 @@
 /*
 All the main functions with respect to the MeMS are inplemented here
 read the function discription for more details
-
 NOTE: DO NOT CHANGE THE NAME OR SIGNATURE OF FUNCTIONS ALREADY PROVIDED
 you are only allowed to implement the functions
 you can also make additional helper functions a you wish
@@ -39,39 +38,34 @@ As PAGESIZE can differ system to system we should have flexibility to modify thi
 macro to make the output of all system same and conduct a fair evaluation.
 */
 #define PAGE_SIZE 4096
-#define MAX_ENTRIES 1000
+#define SIZE 1000
 
-// Define a struct to represent a key-value pair with void* pointers
 struct KeyValuePair
 {
     void *key;
     void *value;
 };
 
-// Define the dictionary as an array of key-value pairs
-struct KeyValuePair dictionary[MAX_ENTRIES];
-int dictionarySize = 0; // Tracks the current size of the dictionary
+struct KeyValuePair dictionary[SIZE];
+int dictionarySize = 0;
 
-// Function to add a key-value pair to the dictionary
-int addToDictionary(void *key, void *value)
+int InsertDict(void *key, void *value)
 {
-    if (dictionarySize < MAX_ENTRIES)
+    if (dictionarySize < SIZE)
     {
         dictionary[dictionarySize].key = key;
         dictionary[dictionarySize].value = value;
         dictionarySize++;
-        printf("Added key: %p, value: %p to the dictionary.\n", key, value);
         return 1; // Success
     }
     else
     {
-        printf("Dictionary is full. Cannot add more items.\n");
-        return 0; // Failure
+        printf("***Dictionary is full, update SIZE in mems.h to make this work***\n");
+        return 0;
     }
 }
 
-// Function to retrieve a value from the dictionary based on a key
-void *getFromDictionary(void *key)
+void *searchDict(void *key)
 {
     for (int i = 0; i < dictionarySize - 1; i++)
     {
@@ -98,6 +92,30 @@ void printList()
             currChain = currChain->next;
         }
         curr = curr->next;
+    }
+}
+
+void removeFromDictionary(void *key)
+{
+    int found = 0;
+    for (int i = 0; i < dictionarySize; i++)
+    {
+        if (dictionary[i].key == key)
+        {
+            found = 1;
+            // Shift elements to cover the gap left by the removed item
+            for (int j = i; j < dictionarySize - 1; j++)
+            {
+                dictionary[j] = dictionary[j + 1];
+            }
+            dictionarySize--;
+            printf("Removed key: %p from the dictionary.\n", key);
+            break;
+        }
+    }
+    if (!found)
+    {
+        printf("Key not found in the dictionary. Cannot remove.\n");
     }
 }
 /*
@@ -189,7 +207,7 @@ void *mems_malloc(size_t size)
                 {
                     prev->next = semiNode;
                 }
-                addToDictionary(vaddress, (void *)semiNode);
+                InsertDict(vaddress, (void *)semiNode);
                 return vaddress;
             }
             prev = curr;
@@ -216,7 +234,6 @@ void *mems_malloc(size_t size)
 
         if (space_used + size <= curr->pages * PAGE_SIZE && curr != head)
         {
-            printf("allocating in same node\n");
             check = true;
             subNode *newNode = (subNode *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
             if (newNode == MAP_FAILED)
@@ -232,7 +249,7 @@ void *mems_malloc(size_t size)
                 curr_side = curr_side->next;
             curr_side->next = newNode;
             v_addr += size;
-            addToDictionary(v_addr, (void *)newNode);
+            InsertDict(v_addr, (void *)newNode);
             return v_addr;
         }
         else if (curr != head)
@@ -244,7 +261,6 @@ void *mems_malloc(size_t size)
 
     if (!check)
     {
-        printf("making new node\n");
         curr = head;
         while (curr->next)
             curr = curr->next;
@@ -268,7 +284,7 @@ void *mems_malloc(size_t size)
         v_addr += size;
         new_node->sideChain = newNode;
         new_node->next = NULL;
-        addToDictionary(v_addr, (void *)newNode);
+        InsertDict(v_addr, (void *)newNode);
         return v_addr;
     }
 }
@@ -292,17 +308,13 @@ void mems_print_stats()
         subNode *currChain = curr->sideChain;
         while (currChain != NULL)
         {
-            if (currChain->type == PROCESS)
+            if (currChain->type == PROCESS && currChain->size != 0)
             {
                 printf("Process of size : %d\n", currChain->size);
             }
-            else if (currChain->type == HOLE)
+            else if (currChain->type == HOLE && currChain->size != 0)
             {
                 printf("Hole of size : %d\n", currChain->size);
-            }
-            else
-            {
-                printf("bc %d %d\n", currChain->size, currChain->type);
             }
             currChain = currChain->next;
         }
@@ -333,7 +345,7 @@ Returns: MeMS physical address mapped to the passed ptr (MeMS virtual address).
 */
 void *mems_get(void *v_ptr)
 {
-    return getFromDictionary(v_ptr);
+    return searchDict(v_ptr);
 }
 
 /*
