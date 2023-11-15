@@ -1,8 +1,8 @@
 install:
-      -@gcc Main.c -o ./Main
+	-@gcc Main.c -o ./Main
 
 run:
-      -@./Main
+	-@./Main
 
 clean:
-      -@rm -fv ./Main
+	-@rm -fv ./Main
