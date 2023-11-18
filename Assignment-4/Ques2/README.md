@@ -9,7 +9,7 @@
 5. [Conclusion](#conclusion)
 
 ## Introduction
-This is a writeup for the solution of The Dining Philospher's Problem in C language as part of the **IIITD CSE231 course Operating Systems** - Assignment 4.
+This is a writeup for the simulation of Car and Passenger in C language as part of the **IIITD CSE231 course Operating Systems** - Assignment 4.
 
 ## How to Run the Program
 1. **Prequisites:**
@@ -24,7 +24,7 @@ This is a writeup for the solution of The Dining Philospher's Problem in C langu
      **OR**
    - Download the .zip file from https://github.com/regular-life/OS-Assignments.
 3. **Opening the Project:**
-   - Unzip the file and navigate to "Assignment-4" -> "Ques1".
+   - Unzip the file and navigate to "Assignment-4" -> "Ques2".
    - Right-click on the screen and select "Go to terminal here" (or any other similar option).
 4. **Running the program:**
    - Make executables by the following command:
