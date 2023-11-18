@@ -57,7 +57,7 @@ The code models the car and passenger actions as threads, with the car performin
 ## Concurrency Bug Avoidance
 1. Semaphores: Used for synchronization between the car and passenger threads.
 2. Flags: `load_flag` and `unload_flag` control boarding and offboarding processes.
-3. Sleep Function: Used to simulate time and avoid race conditions.
+3. Sleep Function: Used to simulate time.
 
 ## Conclusion
 The code provides a simple simulation of a car and passengers using threads and semaphores. It aims to avoid concurrency bugs and deadlock by careful synchronization. Feel free to modify the code for experimentation.
