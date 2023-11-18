@@ -9,28 +9,36 @@
 5. [Conclusion](#conclusion)
 
 ## Introduction
-This C code simulates a scenario where a car has limited capacity, and passengers eagerly await their turn to take a ride. The car and passenger actions are modeled as threads, and synchronization is achieved using semaphores.
+This is a writeup for the solution of The Dining Philospher's Problem in C language as part of the **IIITD CSE231 course Operating Systems** - Assignment 4.
 
-## How to Run the Code
-1. **Compile the Code:**
-   - Open a terminal and navigate to the directory containing the code.
-   - Compile the code using the following command:
+## How to Run the Program
+1. **Prequisites:**
+   - Linux based OS.
+   - GCC compiler on the system.
+   - Linux-header files on the system.
+2. **Cloning the Repository:**
+   - Clone the repository to your local machine using the following command:
      ```bash
-     gcc -o car_simulation car_simulation.c -lpthread
+     git clone https://github.com/regular-life/OS-Assignments.git
      ```
-
-2. **Run the Executable:**
-   - Run the compiled executable:
+     **OR**
+   - Download the .zip file from https://github.com/regular-life/OS-Assignments.
+3. **Opening the Project:**
+   - Unzip the file and navigate to "Assignment-4" -> "Ques1".
+   - Right-click on the screen and select "Go to terminal here" (or any other similar option).
+4. **Running the program:**
+   - Make executables by the following command:
      ```bash
-     ./car_simulation
+     make install
      ```
-
-3. **Input Parameters:**
-   - Enter the capacity of the car when prompted.
-   - Enter the total number of passengers when prompted.
-
-4. **Output:**
-   - The program will simulate the car and passenger threads, printing messages to the console.
+   - Run the executables by the following command:
+     ```bash
+     make run
+     ```
+5. **Delete the executables:**
+   ```bash
+   make clean
+   ```
 
 ## Code Logic
 The code models the car and passenger actions as threads, with the car performing loading, running, and unloading procedures. Passengers board and offboard the car based on semaphore synchronization.
