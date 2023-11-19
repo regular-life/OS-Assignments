@@ -16,11 +16,11 @@ void* car(void* args)
 {
     load() ;
     sleep(5) ;
-    for (int i = 0 ; i < passengers ; i++)
+    for (int i = 0 ; i < min(capacity, passengers) ; i++)
     {
         sem_post(&se) ;
     }
-    for (int i = 0 ; i < passengers ; i++)
+    for (int i = 0 ; i < min(capacity, passengers) ; i++)
     {
         sem_wait(&se2) ;
     }
@@ -32,7 +32,7 @@ void* car(void* args)
     }
     printf("\n") ;
     unload() ;
-    for (int i = 0 ; i < passengers ; i++)
+    for (int i = 0 ; i < min(capacity, passengers) ; i++)
     {
         sem_post(&travel) ;
     }
@@ -92,6 +92,15 @@ void offboard(int id)
     }
 }
 
+int min(int a, int b)
+{
+    if (a < b)
+    {
+        return a ;
+    }
+    return b ;
+}
+
 signed main()
 {
     printf("Capacity of the bus: ");
@@ -103,18 +112,24 @@ signed main()
     sem_init(&se2, 0, 0) ;
     pthread_t janta[passengers] ;
     pthread_t car_thread ;
-    for (int i = 0 ; i < passengers ; i++)
+    int prev = 0 ;
+    while (passengers > 0)
     {
-        pthread_create(&janta[i], NULL, passenger, (void*)i) ;
+        for (int i = prev ; i < prev + min(capacity, passengers) ; i++)
+        {
+            pthread_create(&janta[i], NULL, passenger, (void*)i) ;
+        }
+        pthread_create(&car_thread, NULL, car, NULL) ;
+        pthread_join(car_thread, NULL) ;
+        for (int i = prev ; i < prev + min(capacity, passengers) ; i++)
+        {
+            pthread_join(janta[i], NULL) ;
+        }
+        prev = prev + min(capacity, passengers) ;
+        passengers -= min(capacity, passengers) ;
     }
-    pthread_create(&car_thread, NULL, car, NULL) ;
-    pthread_join(car_thread, NULL) ;
-    for (int i = 0 ; i < passengers ; i++)
-    {
-        pthread_join(janta[i], NULL) ;
-    }
-
     sem_destroy(&se) ;
     sem_destroy(&travel) ;
     sem_destroy(&se2) ;
+    printf("All passengers have been transported\n") ;
 }
