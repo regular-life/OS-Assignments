@@ -33,7 +33,11 @@ void* philosopher(void* args)
     {
         printf("Philosopher %d is thinking\n", id) ;
         thinking() ;
-        pthread_mutex_lock(&overall_lock) ;
+        if (pthread_mutex_lock(&overall_lock) != 0)
+        {
+            perror("Error in pthread_mutex_lock\n") ;
+            exit(1) ;
+        }
         if (number_of_bowls_in_use < NUM_BOWLS)
         {
             number_of_bowls_in_use++ ;
@@ -44,24 +48,48 @@ void* philosopher(void* args)
                 printf("Philosopher %d is eating\n", id) ;
                 forks_status() ;
                 bowls_status() ;
-                pthread_mutex_unlock(&overall_lock) ;
+                if (pthread_mutex_unlock(&overall_lock) != 0)
+                {
+                    perror("Error in pthread_mutex_unlock\n") ;
+                    exit(1) ;
+                }
                 eating() ;
-                pthread_mutex_lock(&overall_lock) ;
+                if (pthread_mutex_lock(&overall_lock) != 0)
+                {
+                    perror("Error in pthread_mutex_lock\n") ;
+                    exit(1) ;
+                }
                 forks[id] = 0 ;
                 forks[(id + 1) % NUM_PHILOSOPHERS] = 0 ;
                 number_of_bowls_in_use-- ;
-                pthread_mutex_unlock(&overall_lock) ;
+                if (pthread_mutex_unlock(&overall_lock) != 0)
+                {
+                    perror("Error in pthread_mutex_unlock\n") ;
+                    exit(1) ;
+                }
             }
             else
             {
                 number_of_bowls_in_use-- ;
-                pthread_mutex_unlock(&overall_lock) ;
+                if (pthread_mutex_unlock(&overall_lock) != 0)
+                {
+                    perror("Error in pthread_mutex_unlock\n") ;
+                    exit(1) ;
+                }
             }
-            pthread_mutex_unlock(&overall_lock) ;
+            if (pthread_mutex_unlock(&overall_lock) != 0)
+            {
+                perror("Error in pthread_mutex_unlock\n") ;
+                exit(1) ;
+            }
         }
         else
         {
-            pthread_mutex_unlock(&overall_lock) ;
+            if (pthread_mutex_unlock(&overall_lock) != 0)
+            {
+                perror("Error in pthread_mutex_unlock\n") ;
+                exit(1) ;
+            }
         }
     }
     return NULL ;
@@ -82,11 +110,19 @@ signed main(int argc, char *argv[])
     pthread_t philosophers[NUM_PHILOSOPHERS] ;
     for (int i = 0 ; i < NUM_PHILOSOPHERS ; i++)
     {
-        pthread_create(&philosophers[i], NULL, philosopher, (void*) i) ;
+        if (pthread_create(&philosophers[i], NULL, philosopher, (void*) i) != 0)
+        {
+            perror("Error in pthread_create\n") ;
+            exit(1) ;
+        }
     }
     for (int i = 0 ; i < NUM_PHILOSOPHERS ; i++)
     {
-        pthread_join(philosophers[i], NULL) ;
+        if (pthread_join(philosophers[i], NULL) != 0)
+        {
+            perror("Error in pthread_join\n") ;
+            exit(1) ;
+        }
     }
     return 0 ;
 }
