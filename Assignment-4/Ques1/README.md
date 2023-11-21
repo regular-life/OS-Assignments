@@ -1,4 +1,4 @@
-# Dining Philosophers Problem: Deadlock-Free Solution
+2# Dining Philosophers Problem: Deadlock-Free Solution
 
 <br />
 
@@ -8,8 +8,9 @@
 3. [Why deadlocks can occur in the problem setup](why-deadlocks-can-occur-in-the-problem-setup)
 4. [How your proposed solution avoids deadlock](how-your-proposed-solution-avoids-deadlock)
 5. [Fairness of the solution](fairness-of-the-solution)
-6. [Conclusion](#conclusion)
-7. [Contributors](#contributors)
+6. [Error Handling](error-handling)
+7. [Conclusion](#conclusion)
+8. [Contributors](#contributors)
 
 ## Introduction
 This is a writeup for the solution of The Dining Philospher's Problem in C language as part of the **IIITD CSE231 course Operating Systems** - Assignment 4.
@@ -57,6 +58,9 @@ This is a writeup for the solution of The Dining Philospher's Problem in C langu
   - The solution is fair since as soon as a philospher consumes a bit of food, the bowl becomes available for use.
   - Basically, a philospher consumes food for an infinite number of times to prevent starvation.
   - Moreover, at max 2 philosphers can eat food concurrently ensuring that every philospher gets their chance ASAP.
+
+## Error Handling
+The code incorporates error handling mechanisms using the `perror` function to display descriptive error messages in case of issues with mutex operations (`pthread_mutex_lock` and `pthread_mutex_unlock`) and thread creation/joining (`pthread_create` and `pthread_join`). If any of these operations fail, the program prints an error message and exits with a status code of 1.
 
 ## Conclusion
 The provided code attempts to address the Dining Philosophers problem by using a global mutex to control access to shared resources. The solution aims to prevent deadlocks and maintain fairness, allowing multiple philosophers to eat concurrently based on the availability of bowls and forks. However, some minor adjustments could improve the efficiency and readability of the code.
