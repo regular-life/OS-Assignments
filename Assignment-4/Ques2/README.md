@@ -3,10 +3,11 @@
 
 ## Table of Contents
 1. [Introduction](#introduction)
-2. [How to Run the Code](#how-to-run-the-code)
+2. [How to Run the Program](#how-to-run-the-program)
 3. [Code Logic](#code-logic)
 4. [Concurrency Bug Avoidance](#concurrency-bug-avoidance)
-5. [Conclusion](#conclusion)
+5. [Error Handling](error-handling)
+6. [Conclusion](#conclusion)
 
 ## Introduction
 This is a writeup for the simulation of Car and Passenger in C language as part of the **IIITD CSE231 course Operating Systems** - Assignment 4.
@@ -58,6 +59,11 @@ The code models the car and passenger actions as threads, with the car performin
 1. Semaphores: Used for synchronization between the car and passenger threads.
 2. Flags: `load_flag` and `unload_flag` control boarding and offboarding processes.
 3. Sleep Function: Used to simulate time.
+
+## Error Handling
+The code includes error handling mechanisms using the `perror` function for various operations involving semaphores (`sem_post`, `sem_wait`, `sem_init`, `sem_destroy`) and threads (`pthread_create`, `pthread_join`). In case of any failure during these operations, the program prints a descriptive error message and exits with a status code of 1.
+
+
 
 ## Conclusion
 The code provides a simple simulation of a car and passengers using threads and semaphores. It aims to avoid concurrency bugs and deadlock by careful synchronization. Feel free to modify the code for experimentation.
