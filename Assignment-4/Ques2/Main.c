@@ -18,14 +18,22 @@ void* car(void* args)
     sleep(5) ;
     for (int i = 0 ; i < min(capacity, passengers) ; i++)
     {
-        sem_post(&se) ;
+        if (sem_post(&se) != 0)
+        {
+            perror("Error in sem_post\n") ;
+            exit(1) ;
+        }
     }
     for (int i = 0 ; i < min(capacity, passengers) ; i++)
     {
-        sem_wait(&se2) ;
+        if (sem_wait(&se2) != 0)
+        {
+            perror("Error in sem_wait\n") ;
+            exit(1) ;
+        }
     }
     printf("Car is moving") ;
-    for (int i = 0 ; i < 10 ; i ++)
+    for (int i = 0 ; i < 5 ; i ++)
     {
         sleep(1) ;
         printf(".") ;
@@ -34,7 +42,11 @@ void* car(void* args)
     unload() ;
     for (int i = 0 ; i < min(capacity, passengers) ; i++)
     {
-        sem_post(&travel) ;
+        if (sem_post(&travel) != 0)
+        {
+            perror("Error in sem_post\n") ;
+            exit(1) ;
+        }
     }
     return NULL ;
 }
@@ -42,10 +54,22 @@ void* car(void* args)
 void* passenger(void* args)
 {
     int id = (int)args ;
-    sem_wait(&se) ;
+    if (sem_wait(&se) != 0)
+    {
+        perror("Error in sem_wait\n") ;
+        exit(1) ;
+    }
     board(id) ;
-    sem_post(&se2) ;
-    sem_wait(&travel) ;
+    if (sem_post(&se2) != 0)
+    {
+        perror("Error in sem_post\n") ;
+        exit(1) ;
+    }
+    if (sem_wait(&travel) != 0)
+    {
+        perror("Error in sem_wait\n") ;
+        exit(1) ;
+    }
     offboard(id) ;
     return NULL ;
 }
@@ -53,7 +77,7 @@ void* passenger(void* args)
 void load()
 {
     printf("Car is starting loading process....\n") ;
-    sleep(2) ;
+    sleep(1) ;
     load_flag = true ;
     printf("Passengers can board the car now\n") ;
 }
@@ -61,7 +85,7 @@ void load()
 void unload()
 {
     printf("Car is starting unloading process....\n") ;
-    sleep(2) ;
+    sleep(1) ;
     unload_flag = true ;
     printf("Passengers can offboard the car now\n") ;
 }
@@ -107,9 +131,21 @@ signed main()
     scanf("%d", &capacity) ;
     printf("Total number of passengers: ") ;
     scanf("%d", &passengers) ;
-    sem_init(&se, 0, 0) ;
-    sem_init(&travel, 0, 0) ;
-    sem_init(&se2, 0, 0) ;
+    if (sem_init(&se, 0, 0) != 0)
+    {
+        perror("Error in sem_init\n") ;
+        exit(1) ;
+    }
+    if (sem_init(&travel, 0, 0) != 0)
+    {
+        perror("Error in sem_init\n") ;
+        exit(1) ;
+    }
+    if (sem_init(&se2, 0, 0) != 0)
+    {
+        perror("Error in sem_init\n") ;
+        exit(1) ;
+    }
     pthread_t janta[passengers] ;
     pthread_t car_thread ;
     int prev = 0 ;
@@ -117,19 +153,47 @@ signed main()
     {
         for (int i = prev ; i < prev + min(capacity, passengers) ; i++)
         {
-            pthread_create(&janta[i], NULL, passenger, (void*)i) ;
+            if (pthread_create(&janta[i], NULL, passenger, (void*)i) != 0)
+            {
+                perror("Error in pthread_create\n") ;
+                exit(1) ;
+            }
         }
-        pthread_create(&car_thread, NULL, car, NULL) ;
-        pthread_join(car_thread, NULL) ;
+        if (pthread_create(&car_thread, NULL, car, NULL) != 0)
+        {
+            perror("Error in pthread_create\n") ;
+            exit(1) ;
+        }
+        if (pthread_join(car_thread, NULL) != 0)
+        {
+            perror("Error in pthread_join\n") ;
+            exit(1) ;
+        }
         for (int i = prev ; i < prev + min(capacity, passengers) ; i++)
         {
-            pthread_join(janta[i], NULL) ;
+            if (pthread_join(janta[i], NULL) != 0)
+            {
+                perror("Error in pthread_join\n") ;
+                exit(1) ;
+            }
         }
         prev = prev + min(capacity, passengers) ;
         passengers -= min(capacity, passengers) ;
     }
-    sem_destroy(&se) ;
-    sem_destroy(&travel) ;
-    sem_destroy(&se2) ;
+    if (sem_destroy(&se) != 0)
+    {
+        perror("Error in sem_destroy\n") ;
+        exit(1) ;
+    }
+    if (sem_destroy(&travel) != 0)
+    {
+        perror("Error in sem_destroy\n") ;
+        exit(1) ;
+    }
+    if (sem_destroy(&se2) != 0)
+    {
+        perror("Error in sem_destroy\n") ;
+        exit(1) ;
+    }
     printf("All passengers have been transported\n") ;
 }
