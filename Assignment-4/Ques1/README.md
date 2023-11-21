@@ -1,4 +1,4 @@
-2# Dining Philosophers Problem: Deadlock-Free Solution
+# Dining Philosophers Problem: Deadlock-Free Solution
 
 <br />
 
