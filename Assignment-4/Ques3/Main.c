@@ -22,17 +22,33 @@ void* left(void* args)
     if (curr_dir == 0 || curr_dir == LEFT)
     {
         curr_dir = LEFT ;
-        sem_wait(&on_bridge) ;
+        if (sem_wait(&on_bridge) != 0)
+        {
+            perror("Error in sem_wait\n") ;
+            exit(1) ;
+        }
         crossing(LEFT, id) ;
-        sem_post(&on_bridge) ;
+        if (sem_post(&on_bridge) != 0)
+        {
+            perror("Error in sem_post\n") ;
+            exit(1) ;
+        }
     }
     else
     {
         while (right_count != total_right) ;
         curr_dir = LEFT ;
-        sem_wait(&on_bridge) ;
+        if (sem_wait(&on_bridge) != 0)
+        {
+            perror("Error in sem_wait\n") ;
+            exit(1) ;
+        }
         crossing(LEFT, id) ;
-        sem_post(&on_bridge) ;
+        if (sem_post(&on_bridge) != 0)
+        {
+            perror("Error in sem_post\n") ;
+            exit(1) ;
+        }
     }
 }
 
@@ -42,17 +58,33 @@ void* right(void* args)
     if (curr_dir == 0 || curr_dir == RIGHT)
     {
         curr_dir = RIGHT ;
-        sem_wait(&on_bridge) ;
+        if (sem_wait(&on_bridge) != 0)
+        {
+            perror("Error in sem_wait\n") ;
+            exit(1) ;
+        }
         crossing(RIGHT, id) ;
-        sem_post(&on_bridge) ;
+        if (sem_post(&on_bridge) != 0)
+        {
+            perror("Error in sem_post\n") ;
+            exit(1) ;
+        }
     }
     else
     {
         while (left_count != total_left) ;
         curr_dir = RIGHT ;
-        sem_wait(&on_bridge) ;
+        if (sem_wait(&on_bridge) != 0)
+        {
+            perror("Error in sem_wait\n") ;
+            exit(1) ;
+        }
         crossing(RIGHT, id) ;
-        sem_post(&on_bridge) ;
+        if (sem_post(&on_bridge) != 0)
+        {
+            perror("Error in sem_post\n") ;
+            exit(1) ;
+        }
     }
 }
 
@@ -78,29 +110,53 @@ signed main()
     printf("Enter total number of cars from right: ");
     scanf("%d", &total_right);
 
-    sem_init(&on_bridge, 0, MAX_CARS) ;
+    if (sem_init(&on_bridge, 0, MAX_CARS) != 0)
+    {
+        perror("Error in sem_init\n") ;
+        exit(1) ;
+    }
 
     pthread_t left_thread[total_left], right_thread[total_right];
 
     for (int i = 0; i < total_left; i++)
     {
-        pthread_create(&left_thread[i], NULL, left, (void*)i);
+        if (pthread_create(&left_thread[i], NULL, left, (void*)i) != 0)
+        {
+            perror("Error in pthread_create\n") ;
+            exit(1) ;
+        }
     }
     for (int i = 0; i < total_right; i++)
     {
-        pthread_create(&right_thread[i], NULL, right, (void*)i);
+        if (pthread_create(&right_thread[i], NULL, right, (void*)i) != 0)
+        {
+            perror("Error in pthread_create\n") ;
+            exit(1) ;
+        }
     }
 
     for (int i = 0; i < total_left; i++)
     {
-        pthread_join(left_thread[i], NULL);
+        if (pthread_join(left_thread[i], NULL) != 0)
+        {
+            perror("Error in pthread_join\n") ;
+            exit(1) ;
+        }
     }
     for (int i = 0; i < total_right; i++)
     {
-        pthread_join(right_thread[i], NULL);
+        if (pthread_join(right_thread[i], NULL) != 0)
+        {
+            perror("Error in pthread_join\n") ;
+            exit(1) ;
+        }
     }
     
-    sem_destroy(&on_bridge) ;
+    if (sem_destroy(&on_bridge) != 0)
+    {
+        perror("Error in sem_destroy\n") ;
+        exit(1) ;
+    }
 
     return 0;
 }
