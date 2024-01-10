@@ -1,3 +1,6 @@
 [submodule "Assignment-1/Ques2"]
 	path = Assignment-1/Ques2
 	url = https://github.com/regular-life/Custom-Shell-Commands
+[submodule "Assignment-2/Ques2"]
+	path = Assignment-2/Ques2
+	url = https://github.com/regular-life/Process-Scheduler-Benchmarking
